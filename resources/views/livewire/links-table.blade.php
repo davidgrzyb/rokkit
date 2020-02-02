@@ -69,7 +69,7 @@
             {{ $links->links() }}
         </div>
     @else
-        <h3 class="text-center pt-50">No links found 😔</h3>
+        <h3 class="h5 text-muted mb-0 mt-50 text-center">No links found 😲</h3>
     @endif
 </div>
 

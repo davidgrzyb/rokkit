@@ -16,6 +16,14 @@
             </a>
         </div>
 
+        @if(Session::has('message'))
+            <div class="row mb-2">
+                <div class="alert alert-success col-md-6 offset-md-3 text-center" role="alert">
+                    {{ Session::get('message') }}
+                </div>
+            </div>
+        @endif
+
         @livewire('links-table')
     </div>
     <!-- END Page Content -->

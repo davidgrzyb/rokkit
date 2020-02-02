@@ -16,7 +16,7 @@
                 <a class="block block-rounded shadow-sm" href="javascript:void(0)">
                     <div class="block-content block-content-full">
                         <div class="py-20 text-center">
-                            <div class="font-size-h2 font-w700 mb-0 text-primary-dark">16</div>
+                            <div class="font-size-h2 font-w700 mb-0 text-primary-dark">{{ number_format(auth()->user()->links()->count()) }}</div>
                             <div class="font-size-sm font-w600 text-primary-light">Active Links</div>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
                 <a class="block block-rounded shadow-sm" href="javascript:void(0)">
                     <div class="block-content block-content-full">
                         <div class="py-20 text-center">
-                            <div class="font-size-h2 font-w700 mb-0 text-primary-dark">1,000</div>
+                            <div class="font-size-h2 font-w700 mb-0 text-primary-dark">{{ number_format(auth()->user()->getRedirectsThisMonth()) }}</div>
                             <div class="font-size-sm font-w600 text-primary-light">Redirects this Month</div>
                         </div>
                     </div>
@@ -36,17 +36,22 @@
                 <a class="block block-rounded shadow-sm" href="javascript:void(0)">
                     <div class="block-content block-content-full">
                         <div class="py-20 text-center">
-                            <div class="font-size-h2 font-w700 mb-0 text-primary-dark">325</div>
+                            <div class="font-size-h2 font-w700 mb-0 text-primary-dark">{{ number_format(auth()->user()->getClicksThisMonth()) }}</div>
                             <div class="font-size-sm font-w600 text-primary-light">Advertisement Clicks</div>
                         </div>
                     </div>
                 </a>
             </div>
+            @php
+                $daysThisMonth = now()->daysInMonth;
+                $dayOfTheMonth = now()->format('d');
+                $average = (auth()->user()->getRedirectsThisMonth() / $dayOfTheMonth) * $daysThisMonth;
+            @endphp
             <div class="col-6 col-xl-3">
                 <a class="block block-rounded shadow-sm" href="javascript:void(0)">
                     <div class="block-content block-content-full">
                         <div class="py-20 text-center">
-                            <div class="font-size-h2 font-w700 mb-0 text-primary-dark">2,500</div>
+                            <div class="font-size-h2 font-w700 mb-0 text-primary-dark">{{ number_format($average) }}</div>
                             <div class="font-size-sm font-w600 text-primary-light">Estimated Monthly Redirects</div>
                         </div>
                     </div>

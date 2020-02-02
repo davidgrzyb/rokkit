@@ -24,7 +24,7 @@
                             <div class="col-12">
                                 <div class="form-material floating">
                                     <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-                                    <label for="name">Username</label>
+                                    <label for="name">Name</label>
 
                                     @error('name')
                                         <span class="invalid-feedback" role="alert">

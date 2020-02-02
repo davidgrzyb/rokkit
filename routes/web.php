@@ -24,8 +24,15 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('/links', 'LinkController@index');
     Route::view('/links/create', 'links.create');
 
-    Route::view('/domains', 'domains.index');
-    Route::view('/domains/create', 'domains.create');
+    Route::get('/domains', 'DomainController@index');
+    Route::get('/domains/create', 'DomainController@create');
+    Route::post('/domains/store', 'DomainController@store');
 
-    Route::view('/account', 'pages.account');
+    Route::get('/account', 'AccountController@index');
+    Route::post('/account/update', 'AccountController@update');
+    Route::post('/account/upgrade', 'AccountController@upgrade');
+});
+
+Route::group(['domain' => '{domain}'], function() {
+
 });

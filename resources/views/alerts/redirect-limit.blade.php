@@ -2,25 +2,25 @@
     $user = auth()->user();
 @endphp
 
-@if($user->getRedeemsLeft() <= 1000)
+@if($user->getRedirectsLeft() <= 1000)
     <div wire:ignore class="row" id="redeem-limit-row">
         <div class="col-md-8 offset-md-2">
-            <div class="alert @if($user->getRedeemsLeft() <= 0) alert-danger @else alert-warning @endif alert-dismissable" role="alert">
+            <div class="alert @if($user->getRedirectsLeft() <= 0) alert-danger @else alert-warning @endif alert-dismissable text-center" role="alert">
                 <button id="redirect-notification-dismiss-btn" type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
                 <h3 class="alert-heading font-size-h4 font-w400">Redirect Limit Reached</h3>
                 <p class="mb-0">
-                    @if($user->getRedeemsLeft() <= 0)
+                    @if($user->getRedirectsLeft() <= 0)
                         You have reached the redirect limit for your account. 
                     @else
                         Your account is close to the monthly redirect limit for your account. 
                     @endif
 
-                    @if($user->plan == 'free')
-                        <a class="alert-link" href="javascript:void(0)">Upgrade to a pro account to remove this limit</a>.
+                    @if(! $user->subscribed(\App\User::PRO_PLAN))
+                        <a class="alert-link" href="{{ url('/account#upgrade') }}">Upgrade to a pro account to remove this limit</a>.
                     @else
-                        <a class="alert-link" href="javascript:void(0)">Purchase more redirects to remove this limit</a>.
+                        Once your redirects run out you will be billed $5 for every additional 1 million redirects.
                     @endif
                 </p>
             </div>
