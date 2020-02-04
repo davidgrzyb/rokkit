@@ -48,6 +48,24 @@ class Link extends Model
         });
     }
 
+    public function isDefault()
+    {
+        return $this->domain->name === config('rokkit.default_domain');
+    }
+
+    public function isEnabled()
+    {
+        if (! $this->enabled) {
+            return false;
+        }
+
+        if (! $this->domain->isEnabled()) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function search($search)
     {
         return empty($search) ? static::query()

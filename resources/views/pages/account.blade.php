@@ -189,7 +189,7 @@
                     <div class="row items-push">
                         <div class="col-lg-3">
                             <p class="text-muted">
-                                Please use this form to updated your default payment method.
+                                Please use this form to update your default payment method.
                             </p>
                         </div>
                 @endif

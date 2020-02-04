@@ -40,7 +40,26 @@ class DomainController extends Controller
         ]);
 
         Session::flash('message', sprintf('Success! Your %s domain was added.', $domain->name));
+        return redirect('/domains');
+    }
 
+    public function delete(Request $request)
+    {
+        $domain = Domain::findOrFail($request->input('id'));
+
+        if ($domain->name === 'rokk.it') {
+            return redirect('/domains');
+        }
+
+        if (auth()->user()->id !== $domain->user->id) {
+            return redirect('/domains');
+        }
+
+        $domain->delete();
+
+        // TODO: disable associated links
+
+        Session::flash('message', sprintf('Success! Your %s domain was deleted.', $domain->name));
         return redirect('/domains');
     }
 }

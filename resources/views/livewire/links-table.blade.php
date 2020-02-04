@@ -55,7 +55,7 @@
                             </p>
                         </div>
                         <div class="col-sm-6 py-10 text-md-right">
-                            <i class="fa fa-circle font-size-md @if($link->enabled) text-success @else text-danger @endif mr-5"></i>
+                            <i class="fa fa-circle font-size-md @if($link->isEnabled()) text-success @else text-danger @endif mr-5"></i>
                             <a class="btn btn-md btn-outline-secondary btn-rounded my-5" href="{{ url('/links', [$link->id]) }}">
                                 <i class="fa fa-wrench mr-5"></i> Manage
                             </a>

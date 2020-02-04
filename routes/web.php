@@ -27,11 +27,14 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('/domains', 'DomainController@index');
     Route::get('/domains/create', 'DomainController@create');
     Route::post('/domains/store', 'DomainController@store');
+    Route::post('/domains/delete', 'DomainController@delete');
 
     Route::get('/account', 'AccountController@index');
     Route::post('/account/update', 'AccountController@update');
     Route::post('/account/upgrade', 'AccountController@upgrade');
 });
+
+Route::get('/{slug}', 'LinkController@redirect');
 
 Route::group(['domain' => '{domain}'], function() {
 

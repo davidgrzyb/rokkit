@@ -10,7 +10,7 @@ class DomainsTable extends Component
 {
     use WithPagination;
 
-    public $perPage = 1;
+    public $perPage = 5;
     public $search = '';
 
     public function render()

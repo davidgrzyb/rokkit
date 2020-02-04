@@ -96,8 +96,8 @@
                             <!-- Logo -->
                             <div class="content-header-item">
                                 <a class="link-effect font-w700" href="{{ url('/dashboard') }}">
-                                    <i class="si si-fire text-primary"></i>
-                                    <span class="font-size-xl text-dual-primary-dark">code</span><span class="font-size-xl text-primary">base</span>
+                                    <i class="si si-rocket text-primary"></i>
+                                    <span class="font-size-xl text-dual-primary-dark">rokk</span><span class="font-size-xl text-primary">it</span>
                                 </a>
                             </div>
                             <!-- END Logo -->
@@ -126,7 +126,7 @@
                                 <a href="{{ url('/account') }}"><i class="si si-user"></i>Account</a>
                             </li>
                             <li>
-                                <a href="{{ url('/domains') }}"><i class="si si-link"></i>Custom Domains</a>
+                                <a href="{{ url('/domains') }}"><i class="si si-link"></i>Domains</a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
@@ -155,8 +155,8 @@
                         <!-- Logo -->
                         <div class="content-header-item mr-5">
                             <a class="link-effect font-w700" href="{{ url('/dashboard') }}">
-                                <i class="si si-fire text-primary"></i>
-                                <span class="font-size-xl text-dual-primary-dark">code</span><span class="font-size-xl text-primary">base</span>
+                                <i class="si si-rocket text-primary"></i>
+                                <span class="font-size-xl text-dual-primary-dark">rokk</span><span class="font-size-xl text-primary">it</span>
                             </a>
                         </div>
                         <!-- END Logo -->
@@ -194,7 +194,7 @@
                                         <a href="{{ url('/account') }}"><i class="si si-user"></i>Account</a>
                                     </li>
                                     <li>
-                                        <a href="{{ url('/domains') }}"><i class="si si-link"></i>Custom Domains</a>
+                                        <a href="{{ url('/domains') }}"><i class="si si-link"></i>Domains</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" href="{{ route('logout') }}"

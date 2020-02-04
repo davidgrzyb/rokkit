@@ -242,9 +242,9 @@
                                 <button type="submit" class="btn btn-lg btn-primary float-right ml-3">
                                     Create Link
                                 </button>
-                                <a type="submit" class="btn btn-lg btn-outline-primary float-right">
+                                <!-- <a type="submit" class="btn btn-lg btn-outline-primary float-right">
                                     Preview
-                                </a>
+                                </a> -->
                             </div>
                         </div>
                     </div>
