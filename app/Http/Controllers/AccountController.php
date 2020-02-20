@@ -44,7 +44,7 @@ class AccountController extends Controller
         $method = $user->updateDefaultPaymentMethod($request->get('stripePaymentMethod'));
 
         if (! $user->subscribed(User::PRO_PLAN)) {
-            $user->newSubscription(User::PRO_PLAN, User::PRO_PLAN_ID)->create($method->paymentMethod);
+            $user->newSubscription(User::PRO_PLAN, config('plans.pro.stripe_plan_id'))->create($method->paymentMethod);
             Session::flash('message', 'Success! You have now been upgraded to a pro account.');
         } else {
             Session::flash('message', 'Success! Your default payment method has been updated.');

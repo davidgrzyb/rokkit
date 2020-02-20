@@ -15,7 +15,6 @@ class User extends Authenticatable
 
     const FREE_PLAN = 'free';
     const PRO_PLAN = 'pro';
-    const PRO_PLAN_ID = 'plan_GePu2rvARsgJXV';
     const PLANS =[
         self::FREE_PLAN,
         self::PRO_PLAN,
@@ -58,18 +57,31 @@ class User extends Authenticatable
         return $this->hasMany(Domain::class);
     }
 
+    public function getActiveLinks()
+    {
+        return $this->links()->where('enabled', true)->get();
+    }
+
     public function getPlanAttribute()
     {
-        if (auth()->user()->subscribed(User::PRO_PLAN)) {
-            return 'pro';
-        }
+        return auth()->user()->subscribed(User::PRO_PLAN) ? User::PRO_PLAN : User::FREE_PLAN;
+    }
 
-        return 'free';
+    public function isInGoodStanding()
+    {
+        return $this->getRedirectsLeft() > 0;
     }
 
     public function getPlanLimit()
     {
         return config(sprintf('plans.%s.limit', $this->plan));
+    }
+
+    public function getRedirectsLeft()
+    {
+        return Cache::remember('redirects_left_'.$this->id, now()->addMinutes(3), function () {
+            return $this->getPlanLimit() - $this->getRedirectsThisMonth();
+        });
     }
 
     public function getClicksThisMonth()
@@ -83,13 +95,6 @@ class User extends Authenticatable
     {
         return Cache::remember('redirects_this_month_'.$this->id, now()->addMinutes(3), function () {
             return $this->links()->withCount('redirects')->get()->sum('redirects_count');
-        });
-    }
-
-    public function getRedirectsLeft()
-    {
-        return Cache::remember('redirects_left_'.$this->id, now()->addMinutes(3), function () {
-            return $this->getPlanLimit() - $this->getRedirectsThisMonth();
         });
     }
 

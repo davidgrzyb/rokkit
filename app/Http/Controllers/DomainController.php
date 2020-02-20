@@ -47,17 +47,19 @@ class DomainController extends Controller
     {
         $domain = Domain::findOrFail($request->input('id'));
 
-        if ($domain->name === 'rokk.it') {
+        if ($domain->isDefault()) {
             return redirect('/domains');
         }
 
-        if (auth()->user()->id !== $domain->user->id) {
+        if (auth()->user()->id !== $domain->user_id) {
             return redirect('/domains');
         }
+
+        $domain->links()->update([
+            'enabled' => false,
+        ]);
 
         $domain->delete();
-
-        // TODO: disable associated links
 
         Session::flash('message', sprintf('Success! Your %s domain was deleted.', $domain->name));
         return redirect('/domains');

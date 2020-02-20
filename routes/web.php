@@ -23,6 +23,7 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('/links', 'LinkController@index');
     Route::view('/links/create', 'links.create');
+    Route::get('/links/{id}', 'LinkController@view');
 
     Route::get('/domains', 'DomainController@index');
     Route::get('/domains/create', 'DomainController@create');
@@ -34,7 +35,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::post('/account/upgrade', 'AccountController@upgrade');
 });
 
-Route::get('/{slug}', 'LinkController@redirect');
+Route::get('/{slug}', 'LinkController@redirect')->middleware(App\Http\Middleware\CheckRedirect::class);
 
 Route::group(['domain' => '{domain}'], function() {
 

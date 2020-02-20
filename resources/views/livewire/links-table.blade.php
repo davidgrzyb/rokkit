@@ -14,7 +14,7 @@
             <select wire:model="domain" class="form-control form-control-lg" id="re-listing-bedrooms" name="re-listing-bedrooms">
                 <option value="">Select a domain..</option>
                 @foreach(auth()->user()->domains as $domain)
-                    <option value="{{ $domain->name }}">{{ $domain->name }}</option>
+                        <option value="{{ $domain->name }}">{{ $domain->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -44,9 +44,15 @@
                     <div class="row align-items-center">
                         <div class="col-sm-6 py-10">
                             <h3 class="h4 text-muted font-w400 mb-0">
-                                <button type="button" class="badge badge-light shortened-url" data-toggle="tooltip" data-placement="top" title="Click to Copy!" data-clipboard-text="{{ $link->url }}">
-                                    {{ $link->url }}
-                                </button>
+                                @unless(! $link->domain_id)
+                                    <button type="button" class="badge badge-light shortened-url" data-toggle="tooltip" data-placement="top" title="Click to Copy!" data-clipboard-text="{{ $link->url }}">
+                                        {{ $link->url }}
+                                    </button>
+                                @else
+                                    <button type="button" class="badge badge-danger shortened-url">
+                                        [Removed]/{{ $link->slug }}
+                                    </button>
+                                @endunless
                                 <i class="fa fa-long-arrow-right mr-3 ml-3"></i> 
                                 {{ $link->target }}
                             </h3>
@@ -56,9 +62,11 @@
                         </div>
                         <div class="col-sm-6 py-10 text-md-right">
                             <i class="fa fa-circle font-size-md @if($link->isEnabled()) text-success @else text-danger @endif mr-5"></i>
-                            <a class="btn btn-md btn-outline-secondary btn-rounded my-5" href="{{ url('/links', [$link->id]) }}">
-                                <i class="fa fa-wrench mr-5"></i> Manage
-                            </a>
+                            @if($link->domain_id)
+                                <a class="btn btn-md btn-outline-secondary btn-rounded my-5" href="{{ url('/links', [$link->id]) }}">
+                                    <i class="fa fa-wrench mr-5"></i> Manage
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>

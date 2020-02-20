@@ -32,4 +32,13 @@ class LinkController extends Controller
         // If link is just a normal redirect, redirect to target.
         return redirect()->to('//'.$link->target);
     }
+
+    public function view(int $id)
+    {
+        $link = Link::findOrFail($id);
+        $domains = auth()->user()->domains;
+        return view('links.view')
+            ->withLink($link)
+            ->withDomains($domains);
+    }
 }

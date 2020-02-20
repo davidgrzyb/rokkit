@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Link;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class LinksTable extends Component
 {
@@ -36,6 +37,10 @@ class LinksTable extends Component
                         $query->where('name', $this->domain);
                     });
                 })
+                ->withCount([
+                    'clicks',
+                    'redirects',
+                ])
                 ->orderBy(
                     $this->sortField == '' ? 'created_at' : $this->sortField,
                     $this->sortOrder

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Link;
 use Illuminate\Database\Eloquent\Model;
 
 class Domain extends Model
@@ -17,7 +18,7 @@ class Domain extends Model
 
     public function links()
     {
-        return $this->hasMany(Link::app);
+        return $this->hasMany(Link::class);
     }
 
     public static function search($search)

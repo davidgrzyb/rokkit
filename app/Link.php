@@ -14,6 +14,11 @@ class Link extends Model
         self::STATUS_DISABLED,
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function domain()
     {
         return $this->belongsTo(Domain::class);
@@ -59,11 +64,20 @@ class Link extends Model
             return false;
         }
 
+        if (! $this->domain_id) {
+            return false;
+        }
+
         if (! $this->domain->isEnabled()) {
             return false;
         }
 
         return true;
+    }
+
+    public function isAdRedirect()
+    {
+        return $this->ad_target !== '';
     }
 
     public static function search($search)

@@ -34,9 +34,15 @@
                             </h3>
                         </div>
                         <div class="col-sm-6 py-10 text-md-right">
-                            <button class="remove-domain-btn btn btn-md btn-outline-danger btn-rounded my-5" id="{{ $domain->id }}" @if($domain->isDefault()) disabled @endif>
-                                <i class="fa fa-remove mr-5"></i> Remove
-                            </button>
+                            @unless($domain->isDefault())
+                                <button class="remove-domain-btn btn btn-md btn-outline-danger btn-rounded my-5" id="{{ $domain->id }}" @if($domain->isDefault()) disabled @endif>
+                                    <i class="fa fa-remove mr-5"></i> Remove
+                                </button>
+                            @else
+                                <button type="button" class="btn btn-md btn-muted btn-rounded my-5 disabled" data-toggle="tooltip" data-placement="top" title="This is the default domain.">
+                                    Default
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>

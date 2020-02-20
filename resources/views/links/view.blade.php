@@ -5,41 +5,22 @@
     <div class="content">
         <div class="my-50 text-center">
             <h2 class="font-w700 text-black mb-10">
-                <!-- <i class="fa fa-user text-muted mr-5"></i>  -->
-                Create New Link
+                {{ $link->url }}
+                <i class="fa fa-long-arrow-right mr-3 ml-3"></i> 
+                {{ $link->target }}
             </h2>
-            <h3 class="h5 text-muted mb-0">
-                Use the form below to create a new shortened redirect link.
-            </h3>
+            <!-- <h3 class="h5 text-muted mb-0">
+                Manage this link below.
+            </h3> -->
         </div>
 
         <div class="block block-rounded block-fx-shadow">
             <div class="block-content">
-                <form action="be_pages_real_estate_listing_new.html" method="POST" enctype="multipart/form-data" onsubmit="return false;">
-                    <!-- <h2 class="content-heading text-black">Redirect Type</h2>
-                    <div class="row items-push">
-                        <div class="col-lg-3">
-                            <p class="text-muted">
-                                Generic Redirect links are like typical shortened urls.
-                            </p>
-                            <p class="text-muted">
-                                Advertisement Redirect links show your advertisement during redirect.
-                            </p>
-                        </div>
-                        <div class="col-lg-7 offset-lg-1">
-                            <div class="form-group">
-                                <div class="custom-file form">
-                                    <select class="form-control form-control-lg" id="re-listing-status" name="re-listing-status">
-                                        <option value="0">Select a type..</option>
-                                        <option value="sale">Generic Redirect URL</option>
-                                        <option value="rent">Advetisement Redirect URL</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
+                <form action="{{ url('/links/update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="link-id" value="{{ $link->id }}">
 
-                    <!-- Vital Info -->
+                    <!-- Target URL Info -->
                     <h2 class="content-heading text-black">Target URL</h2>
                     <div class="row items-push">
                         <div class="col-lg-3">
@@ -49,35 +30,14 @@
                         </div>
                         <div class="col-lg-7 offset-lg-1">
                             <div class="form-group">
-                                <label for="re-listing-name">Target URL</label>
-                                <input type="text" class="form-control form-control-lg" id="re-listing-name" name="re-listing-name" placeholder="ex. google.com">
+                                <label for="target-url">Target URL</label>
+                                <input type="text" class="form-control form-control-lg" id="target-url" name="target-url" placeholder="ex. google.com" value="{{ $link->target }}">
                             </div>
-                            <!-- <div class="form-group">
-                                <label for="re-listing-address">Address</label>
-                                <input type="text" class="form-control form-control-lg" id="re-listing-address" name="re-listing-address" placeholder="eg Street Name 45, NY">
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-8">
-                                    <label for="re-listing-status">Status</label>
-                                    <select class="form-control form-control-lg" id="re-listing-status" name="re-listing-status">
-                                        <option value="0">Please select</option>
-                                        <option value="sale">For Sale</option>
-                                        <option value="rent">For Rent</option>
-                                        <option value="unavailable">Unavailable</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-8">
-                                    <label for="re-listing-price">Price</label>
-                                    <input type="text" class="form-control form-control-lg" id="re-listing-price" name="re-listing-price" placeholder="eg $250,000">
-                                </div>
-                            </div> -->
                         </div>
                     </div>
-                    <!-- END Vital Info -->
+                    <!-- END Target URL Info -->
 
-                    <!-- Additional Info -->
+                    <!-- Domain & Link Info -->
                     <h2 class="content-heading text-black">Domain & Link</h2>
                     <div class="row items-push">
                         <div class="col-lg-3">
@@ -86,33 +46,31 @@
                             </p>
                         </div>
                         <div class="col-lg-7 offset-lg-1">
-                            <label for="re-listing-bedrooms">Domain</label>
+                            <label for="domain">Domain</label>
                             <div class="form-group">
-                                <select class="form-control form-control-lg" id="re-listing-bedrooms" name="re-listing-bedrooms" disabled>
-                                    <option value="0" selected>rokk.it</option>
-                                    <option value="1">dgrzyb.me</option>
-                                    <option value="2">domain2.com</option>
-                                    <option value="3">wow.me</option>
-                                    <option value="4">goggle.ca</option>
+                                <select class="form-control form-control-lg" id="domain" name="domain" @if(! auth()->user()->subscribed(\App\User::PRO_PLAN)) disabled @endif>
+                                    @foreach($domains as $domain)
+                                        <option value="{{ $domain->id }}" @if($link->domain_id === $domain->id) selected @endif>{{ $domain->name }}</option>
+                                    @endforeach
                                 </select>
                                 <small class="text-muted">The free plan does not include custom domain functionality. <a href="#">Upgrade your plan here.</a></small>
                             </div>
                             <div class="form-group">
-                                <label for="re-listing-description">Slug</label>
+                                <label for="slug">Slug</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" style="font-size:1.15em;">
-                                            rokk.it/
+                                            {{ $link->domain->name }}/
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control form-control-lg" id="example-input1-group1" name="example-input1-group1" placeholder="slug">
+                                    <input type="text" class="form-control form-control-lg" id="slug" name="slug" placeholder="slug" value="{{ $link->slug }}">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- END Additional Info -->
+                    <!-- END Domain & Link Info -->
 
-                    <!-- Contact Info -->
+                    <!-- Advertising Info -->
                     <h2 class="content-heading text-black">Advertising</h2>
                     <div class="row items-push">
                         <div class="col-lg-3">
@@ -122,175 +80,224 @@
                         </div>
                         <div class="col-lg-7 offset-lg-1">
                             <label class="css-control css-control-success css-switch">
-                                <input type="checkbox" class="css-control-input" checked="">
+                                <input type="checkbox" class="css-control-input" id="advertising-enabled" @if($link->isAdRedirect()) checked @endif>
                                 <span class="css-control-indicator"></span> <span id="advertising-status">Enabled</span>
                             </label>
                         </div>
                     </div>
-                    <!-- END Contact Info -->
+                    <!-- END Advertising Info -->
 
-                    <!-- Contact Info -->
-                    <h2 class="content-heading text-black">Content</h2>
-                    <div class="row items-push">
-                        <div class="col-lg-3">
-                            <p class="text-muted">
-                                Would would you like your ad to say during redirect?
-                            </p>
-                        </div>
-                        <div class="col-lg-7 offset-lg-1">
-                            <div class="form-group">
-                                <label for="re-listing-name">Main Text</label>
-                                <input type="text" class="form-control form-control-lg" id="re-listing-name" name="re-listing-name" placeholder="ex. google.com">
-                                <small class="text-muted">This text will appear above the image or video that will be featured during redirect.</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="re-listing-name">Secondary Description</label>
-                                <input type="text" class="form-control form-control-lg" id="re-listing-name" name="re-listing-name" placeholder="ex. google.com">
-                                <small class="text-muted">This text will appear below the image or video that will be featured during redirect.</small>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END Contact Info -->
+                    <div id="advetising-form">
 
-                    <!-- Contact Info -->
-                    <h2 class="content-heading text-black">Content</h2>
-                    <div class="row items-push">
-                        <div class="col-lg-3">
-                            <p class="text-muted">
-                                Where would you like your advertisement to lead to?
-                            </p>
-                        </div>
-                        <div class="col-lg-7 offset-lg-1">
-                            <div class="form-group">
-                                <label for="re-listing-name">Ad Target URL</label>
-                                <input type="text" class="form-control form-control-lg" id="re-listing-name" name="re-listing-name" placeholder="ex. google.com">
-                                <small class="text-muted">This is the link that media and text will link to on the redirect page.</small>
+                        <!-- Content -->
+                        <h2 class="content-heading text-black">Content</h2>
+                        <div class="row items-push">
+                            <div class="col-lg-3">
+                                <p class="text-muted">
+                                    Would would you like your ad to say during redirect?
+                                </p>
+                            </div>
+                            <div class="col-lg-7 offset-lg-1">
+                                <div class="form-group">
+                                    <label for="main-text">Main Text</label>
+                                    <input type="text" class="form-control form-control-lg" id="main-text" name="main-text" value="{{ $link->main_text }}">
+                                    <small class="text-muted">This text will appear above the image or video that will be featured during redirect.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="secondary-text">Secondary Description</label>
+                                    <textarea rows="4" class="form-control form-control-lg" id="secondary-text" name="secondary-text">{{ $link->secondary_text }}</textarea>
+                                    <small class="text-muted">This text will appear below the image or video that will be featured during redirect.</small>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- END Contact Info -->
+                        <!-- END Content -->
 
-                    <!-- Contact Info -->
-                    <h2 class="content-heading text-black">Styling</h2>
-                    <div class="row items-push">
-                        <div class="col-lg-3">
-                            <p class="text-muted">
-                                Select the styles you would like your ad to have.
-                            </p>
+                        <!-- Ad Target -->
+                        <h2 class="content-heading text-black">Ad Target</h2>
+                        <div class="row items-push">
+                            <div class="col-lg-3">
+                                <p class="text-muted">
+                                    Where would you like your advertisement to lead to?
+                                </p>
+                            </div>
+                            <div class="col-lg-7 offset-lg-1">
+                                <div class="form-group">
+                                    <label for="ad-target">Ad Target URL</label>
+                                    <input type="text" class="form-control form-control-lg" id="ad-target" name="ad-target" placeholder="ex. mystore.com/shop" value="{{ $link->ad_target }}">
+                                    <small class="text-muted">This is the link that media and text will link to on the redirect page.</small>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-lg-7 offset-lg-1">
-                            <div class="row">
-                                <div class="form-group col">
-                                    <label for="re-listing-name">Page Background Color</label>
-                                    <div class="js-colorpicker input-group js-colorpicker-enabled colorpicker-element" data-format="hex" data-colorpicker-id="2">
-                                        <input type="text" class="form-control" id="example-colorpicker2" name="example-colorpicker2" value="#42a5f5">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text colorpicker-input-addon" data-original-title="" title="" tabindex="0">
-                                                <i style="background: rgb(66, 165, 245);"></i>
-                                            </span>
+                        <!-- END Ad Target -->
+
+                        <!-- Styling -->
+                        <h2 class="content-heading text-black">Styling</h2>
+                        <div class="row items-push">
+                            <div class="col-lg-3">
+                                <p class="text-muted">
+                                    Select the styles you would like your ad to have.
+                                </p>
+                            </div>
+                            <div class="col-lg-7 offset-lg-1">
+                                <div class="row">
+                                    <div class="form-group col">
+                                        <label for="page-bg-color">Page Background Color</label>
+                                        <div class="js-colorpicker input-group js-colorpicker-enabled colorpicker-element" id="page-bg-color-picker" data-format="hex" data-colorpicker-id="1">
+                                            <input type="text" class="form-control" id="page-bg-hex" name="page-bg-hex" placeholder="Hex Code" value="{{ $link->bg_color }}">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text colorpicker-input-addon" data-original-title="" title="" tabindex="0">
+                                                    <i style="background: {{ $link->main_text_color ?? '#42a5f5' }};"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label for="main-text-hex">Main Text Color</label>
+                                        <div class="js-colorpicker input-group js-colorpicker-enabled colorpicker-element" id="main-text-color-picker" data-format="hex" data-colorpicker-id="2">
+                                            <input type="text" class="form-control" id="main-text-hex" name="main-text-hex" placeholder="Hex Code" value="{{ $link->main_text_color }}">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text colorpicker-input-addon" data-original-title="" title="" tabindex="0">
+                                                    <i style="background: {{ $link->main_text_color ?? '#42a5f5' }};"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label for="secondary-text-hex">Secondary Description Color</label>
+                                        <div class="js-colorpicker input-group js-colorpicker-enabled colorpicker-element" id="secondary-text-color-picker" data-format="hex" data-colorpicker-id="3">
+                                            <input type="text" class="form-control" id="secondary-text-hex" name="secondary-text-hex" placeholder="Hex Code" value="{{ $link->secondary_text_color }}">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text colorpicker-input-addon" data-original-title="" title="" tabindex="0">
+                                                    <i style="background: {{ $link->main_text_color ?? '#42a5f5' }};"></i>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col">
-                                    <label for="re-listing-name">Main Text Color</label>
-                                    <div class="js-colorpicker input-group js-colorpicker-enabled colorpicker-element" data-format="hex" data-colorpicker-id="2">
-                                        <input type="text" class="form-control" id="example-colorpicker2" name="example-colorpicker2" value="#42a5f5">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text colorpicker-input-addon" data-original-title="" title="" tabindex="0">
-                                                <i style="background: rgb(66, 165, 245);"></i>
-                                            </span>
-                                        </div>
+                            </div>
+                        </div>
+                        <!-- END Styling -->
+
+                        <!-- Media -->
+                        <h2 class="content-heading text-black">Media</h2>
+                        <div class="row items-push">
+                            <div class="col-lg-3">
+                                <p class="text-muted">
+                                    What would you like to show during the redirect?
+                                </p>
+                                <p class="text-muted">
+                                    If no image is uploaded, only the text entered above will be shown.
+                                </p>
+                            </div>
+                            <div class="col-lg-7 offset-lg-1">
+                                <img src="https://via.placeholder.com/400x400.png">
+                                <div class="form-group pt-30">
+                                    <label for="re-listing-name">Replace Image</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input js-custom-file-input-enabled" id="example-file-input-custom" name="example-file-input-custom" data-toggle="custom-file-input">
+                                        <label class="custom-file-label" for="example-file-input-custom">Choose file</label>
                                     </div>
                                 </div>
-                                <div class="form-group col">
-                                    <label for="re-listing-name">Secondary Description Color</label>
-                                    <div class="js-colorpicker input-group js-colorpicker-enabled colorpicker-element" data-format="hex" data-colorpicker-id="2">
-                                        <input type="text" class="form-control" id="example-colorpicker2" name="example-colorpicker2" value="#42a5f5">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text colorpicker-input-addon" data-original-title="" title="" tabindex="0">
-                                                <i style="background: rgb(66, 165, 245);"></i>
-                                            </span>
-                                        </div>
+                            </div>
+                        </div>
+                        <!-- END Media -->
+
+                        <!-- Delay -->
+                        <h2 class="content-heading text-black">Delay</h2>
+                        <div class="row items-push">
+                            <div class="col-lg-3">
+                                <p class="text-muted">
+                                    How long would you like the delay to be during the redirect?
+                                </p>
+                            </div>
+                            <div class="col-lg-7 offset-lg-1">
+                                <div class="row">
+                                    <div class="form-group col">
+                                        <label for="delay">Delay (Seconds)</label>
+                                        <input type="text" class="form-control form-control-lg" id="delay" name="delay" placeholder="10" value="{{ $link->delay }}">
+                                    </div>
+                                    <div class="form-group col">
+                                        <label for="show-progress-bar">Show Progress Bar</label>
+                                        <select class="form-control form-control-lg" id="show-progress-bar" name="show-progress-bar">
+                                            <option value="0" @if($link->progress_bar_enabled) selected @endif>Yes</option>
+                                            <option value="1" @if(! $link->progress_bar_enabled) selected @endif>No</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label for="show-skip-button">Show Skip Button</label>
+                                        <select class="form-control form-control-lg" id="show-skip-button" name="show-skip-button">
+                                            <option value="0" @if($link->skip_button_enabled) selected @endif>Yes</option>
+                                            <option value="1" @if(! $link->skip_button_enabled) selected @endif>No</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- END Contact Info -->
+                        <!-- END Delay -->
 
-                    <!-- Contact Info -->
-                    <h2 class="content-heading text-black">Media</h2>
-                    <div class="row items-push">
-                        <div class="col-lg-3">
-                            <p class="text-muted">
-                                What would you like to show during the redirect?
-                            </p>
-                            <p class="text-muted">
-                                If no image is uploaded, only the text entered above will be shown.
-                            </p>
-                        </div>
-                        <div class="col-lg-7 offset-lg-1">
-                            <div class="form-group">
-                                <label for="re-listing-name">Image Upload</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input js-custom-file-input-enabled" id="example-file-input-custom" name="example-file-input-custom" data-toggle="custom-file-input">
-                                    <label class="custom-file-label" for="example-file-input-custom">Choose file</label>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <!-- END Contact Info -->
 
-                    <!-- Contact Info -->
-                    <h2 class="content-heading text-black">Delay</h2>
-                    <div class="row items-push">
-                        <div class="col-lg-3">
-                            <p class="text-muted">
-                                How long would you like the delay to be during the redirect?
-                            </p>
-                        </div>
-                        <div class="col-lg-7 offset-lg-1">
-                            <div class="row">
-                                <div class="form-group col">
-                                    <label for="re-listing-name">Delay (Seconds)</label>
-                                    <input type="text" class="form-control form-control-lg" id="re-listing-name" name="re-listing-name" placeholder="10">
-                                </div>
-                                <div class="form-group col">
-                                    <label for="re-listing-name">Show Progress Bar</label>
-                                    <select class="form-control form-control-lg" id="re-listing-bedrooms" name="re-listing-bedrooms">
-                                        <option value="0" selected>Yes</option>
-                                        <option value="1">No</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col">
-                                    <label for="re-listing-name">Show Skip Button</label>
-                                    <select class="form-control form-control-lg" id="re-listing-bedrooms" name="re-listing-bedrooms">
-                                        <option value="0" selected>Yes</option>
-                                        <option value="1">No</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END Contact Info -->
-
-                    <!-- Form Submission -->
+                    <!-- Submit -->
                     <div class="row items-push pt-50 pb-30">
                         <div class="col-md-11">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-lg btn-success float-right ml-3">
+                                <button type="submit" class="btn btn-lg btn-primary float-right ml-3">
                                     Create Link
                                 </button>
-                                <button type="submit" class="btn btn-lg btn-outline-success float-right">
-                                    View Preview
-                                </button>
+                                <!-- <a type="submit" class="btn btn-lg btn-outline-primary float-right">
+                                    Preview
+                                </a> -->
                             </div>
                         </div>
                     </div>
-                    <!-- END Form Submission -->
+                    <!-- END Submit -->
                 </form>
             </div>
         </div>
     </div>
     <!-- END Page Content -->
+@endsection
+
+@section('css_before')
+    <link rel="stylesheet" href="{{ asset('js/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
+@endsection
+
+@section('js_after')
+    <script src="{{ asset('js/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js') }}"></script>
+    <script>
+        jQuery(function(){
+            Codebase.helpers('colorpicker');
+        });
+    </script>
+    <script>
+        $('#advertising-enabled').change(function () {
+            if (this.checked) {
+                $('#advetising-form').show();
+                $('#advertising-status').text('Enabled');
+            }
+            else {
+                $('#advetising-form').hide();
+                $('#advertising-status').text('Disabled');
+            }
+        }).change()
+    </script>
+    <script>
+        $(function() {
+            $('#page-bg-color-picker').colorpicker({
+                popover: true,
+                container: '#demo'
+                // default: "42a5f5",
+            });
+
+            $('#main-text-color-picker').colorpicker({
+                popover: true,
+                container: '#demo'
+            });
+
+            $('#secondary-text-color-picker').colorpicker({
+                popover: true,
+                container: '#demo'
+            });
+        });
+    </script>
 @endsection

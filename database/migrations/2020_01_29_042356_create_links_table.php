@@ -15,7 +15,7 @@ class CreateLinksTable extends Migration
     {
         Schema::create('links', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('domain_id')->unsigned()->default(0);
+            $table->bigInteger('domain_id')->unsigned()->default(0)->nullable();
             $table->bigInteger('user_id')->unsigned();
             $table->string('slug', 50);
             $table->string('target', 500);
@@ -32,8 +32,8 @@ class CreateLinksTable extends Migration
             $table->string('secondary_text_color', 20)->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('domain_id')->references('id')->on('domains')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('domain_id')->references('id')->on('domains')->onDelete('set null');
         });
     }
 
