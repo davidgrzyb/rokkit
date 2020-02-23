@@ -14,11 +14,46 @@
             </h3> -->
         </div>
 
+        @if(Session::has('message'))
+            <div class="row mb-2">
+                <div class="alert alert-success col-md-6 offset-md-3 text-center" role="alert">
+                    {{ Session::get('message') }}
+                </div>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="row mb-2">
+                <div class="alert alert-danger col-md-6 offset-md-3 text-center" role="alert">
+                    @foreach ($errors->all() as $error)
+                        {{ $error }} <br>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <div class="block block-rounded block-fx-shadow">
             <div class="block-content">
                 <form action="{{ url('/links/update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="link-id" value="{{ $link->id }}">
+
+                    <!-- Enabled Info -->
+                    <h2 class="content-heading text-black">Link Status</h2>
+                    <div class="row items-push">
+                        <div class="col-lg-3">
+                            <p class="text-muted">
+                                Where would you like the redirect to go?
+                            </p>
+                        </div>
+                        <div class="col-lg-7 offset-lg-1">
+                            <label class="css-control css-control-success css-switch">
+                                <input type="checkbox" class="css-control-input" name="enabled" id="enabled" @if($link->enabled) checked @endif>
+                                <span class="css-control-indicator"></span> <span id="enabled-status">Enabled</span>
+                            </label>
+                        </div>
+                    </div>
+                    <!-- END Enabled Info -->
 
                     <!-- Target URL Info -->
                     <h2 class="content-heading text-black">Target URL</h2>
@@ -48,12 +83,12 @@
                         <div class="col-lg-7 offset-lg-1">
                             <label for="domain">Domain</label>
                             <div class="form-group">
-                                <select class="form-control form-control-lg" id="domain" name="domain" @if(! auth()->user()->subscribed(\App\User::PRO_PLAN)) disabled @endif>
+                                <select class="form-control form-control-lg" id="domain-id" name="domain-id" @if(! auth()->user()->subscribed(\App\User::PRO_PLAN)) disabled @endif>
                                     @foreach($domains as $domain)
                                         <option value="{{ $domain->id }}" @if($link->domain_id === $domain->id) selected @endif>{{ $domain->name }}</option>
                                     @endforeach
                                 </select>
-                                <small class="text-muted">The free plan does not include custom domain functionality. <a href="#">Upgrade your plan here.</a></small>
+                                <small class="text-muted">The free plan does not include custom domain functionality. <a href="{{ url('/account') }}" target="_blank">Upgrade your plan here.</a></small>
                             </div>
                             <div class="form-group">
                                 <label for="slug">Slug</label>
@@ -80,7 +115,7 @@
                         </div>
                         <div class="col-lg-7 offset-lg-1">
                             <label class="css-control css-control-success css-switch">
-                                <input type="checkbox" class="css-control-input" id="advertising-enabled" @if($link->isAdRedirect()) checked @endif>
+                                <input type="checkbox" class="css-control-input" name="advertising-enabled" id="advertising-enabled" value="true" @if($link->isAdRedirect()) checked @endif>
                                 <span class="css-control-indicator"></span> <span id="advertising-status">Enabled</span>
                             </label>
                         </div>
@@ -194,7 +229,7 @@
                                 <div class="form-group pt-30">
                                     <label for="re-listing-name">Replace Image</label>
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input js-custom-file-input-enabled" id="example-file-input-custom" name="example-file-input-custom" data-toggle="custom-file-input">
+                                        <input type="file" class="custom-file-input js-custom-file-input-enabled" id="image" name="image" data-toggle="custom-file-input">
                                         <label class="custom-file-label" for="example-file-input-custom">Choose file</label>
                                     </div>
                                 </div>
@@ -219,15 +254,15 @@
                                     <div class="form-group col">
                                         <label for="show-progress-bar">Show Progress Bar</label>
                                         <select class="form-control form-control-lg" id="show-progress-bar" name="show-progress-bar">
-                                            <option value="0" @if($link->progress_bar_enabled) selected @endif>Yes</option>
-                                            <option value="1" @if(! $link->progress_bar_enabled) selected @endif>No</option>
+                                            <option value="1" @if($link->progress_bar_enabled) selected @endif>Yes</option>
+                                            <option value="0" @if(! $link->progress_bar_enabled) selected @endif>No</option>
                                         </select>
                                     </div>
                                     <div class="form-group col">
                                         <label for="show-skip-button">Show Skip Button</label>
                                         <select class="form-control form-control-lg" id="show-skip-button" name="show-skip-button">
-                                            <option value="0" @if($link->skip_button_enabled) selected @endif>Yes</option>
-                                            <option value="1" @if(! $link->skip_button_enabled) selected @endif>No</option>
+                                            <option value="1" @if($link->skip_button_enabled) selected @endif>Yes</option>
+                                            <option value="0" @if(! $link->skip_button_enabled) selected @endif>No</option>
                                         </select>
                                     </div>
                                 </div>
@@ -278,6 +313,15 @@
             else {
                 $('#advetising-form').hide();
                 $('#advertising-status').text('Disabled');
+            }
+        }).change()
+
+        $('#enabled').change(function () {
+            if (this.checked) {
+                $('#enabled-status').text('Enabled');
+            }
+            else {
+                $('#enabled-status').text('Disabled');
             }
         }).change()
     </script>

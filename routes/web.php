@@ -23,7 +23,8 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('/links', 'LinkController@index');
     Route::view('/links/create', 'links.create');
-    Route::get('/links/{id}', 'LinkController@view');
+    Route::get('/links/{id}', 'LinkController@view')->name('links.view');
+    Route::post('/links/update', 'LinkController@update');
 
     Route::get('/domains', 'DomainController@index');
     Route::get('/domains/create', 'DomainController@create');
