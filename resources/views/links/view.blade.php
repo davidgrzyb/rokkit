@@ -225,9 +225,11 @@
                                 </p>
                             </div>
                             <div class="col-lg-7 offset-lg-1">
-                                <img src="https://via.placeholder.com/400x400.png">
-                                <div class="form-group pt-30">
-                                    <label for="re-listing-name">Replace Image</label>
+                                @if($link->image)
+                                    <img class="pb-30" style="max-width:100%;" src="{{ asset($link->image) }}">
+                                @endif
+                                <div class="form-group">
+                                    <label for="re-listing-name">@if($link->image) Replace Image @else Upload Image @endif</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input js-custom-file-input-enabled" id="image" name="image" data-toggle="custom-file-input">
                                         <label class="custom-file-label" for="example-file-input-custom">Choose file</label>

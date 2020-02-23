@@ -17,6 +17,7 @@ class DomainsTable extends Component
     {
         return view('livewire.domains-table', [
             'domains' => Domain::search($this->search)
+                ->where('user_id', auth()->user()->id)
                 ->orderByDesc('created_at')
                 ->paginate($this->perPage),
         ]);

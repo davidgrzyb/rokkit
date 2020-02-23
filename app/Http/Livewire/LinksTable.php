@@ -32,6 +32,7 @@ class LinksTable extends Component
     {
         return view('livewire.links-table', [
             'links' => Link::search($this->search)
+                ->where('user_id', auth()->user()->id)
                 ->when($this->domain != '', function ($query) {
                     $query->whereHas('domain', function ($query) {
                         $query->where('name', $this->domain);

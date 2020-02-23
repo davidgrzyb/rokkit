@@ -123,10 +123,10 @@
                                 <a href="{{ url('/links') }}"><i class="si si-rocket"></i>Links</a>
                             </li>
                             <li>
-                                <a href="{{ url('/account') }}"><i class="si si-user"></i>Account</a>
+                                <a href="{{ url('/domains') }}"><i class="si si-link"></i>Domains</a>
                             </li>
                             <li>
-                                <a href="{{ url('/domains') }}"><i class="si si-link"></i>Domains</a>
+                                <a href="{{ url('/account') }}"><i class="si si-user"></i>Account</a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
@@ -191,10 +191,10 @@
                                         <a href="{{ url('/links') }}"><i class="si si-rocket"></i>Links</a>
                                     </li>
                                     <li>
-                                        <a href="{{ url('/account') }}"><i class="si si-user"></i>Account</a>
+                                        <a href="{{ url('/domains') }}"><i class="si si-link"></i>Domains</a>
                                     </li>
                                     <li>
-                                        <a href="{{ url('/domains') }}"><i class="si si-link"></i>Domains</a>
+                                        <a href="{{ url('/account') }}"><i class="si si-user"></i>Account</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" href="{{ route('logout') }}"
