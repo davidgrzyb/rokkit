@@ -17,13 +17,12 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function()
 {
-    Route::match(['get', 'post'], '/dashboard', function(){
-        return view('dashboard');
-    });
+    Route::get('/dashboard', 'DashboardController@index');
 
-    Route::get('/links', 'LinkController@index');
-    Route::view('/links/create', 'links.create');
+    Route::get('/links', 'LinkController@index')->name('links.index');
+    Route::get('/links/create', 'LinkController@create')->name('links.create');
     Route::get('/links/{id}', 'LinkController@view')->name('links.view');
+    Route::post('/links/store', 'LinkController@store');
     Route::post('/links/update', 'LinkController@update');
 
     Route::get('/domains', 'DomainController@index');

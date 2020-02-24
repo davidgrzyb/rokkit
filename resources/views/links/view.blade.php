@@ -43,7 +43,7 @@
                     <div class="row items-push">
                         <div class="col-lg-3">
                             <p class="text-muted">
-                                Where would you like the redirect to go?
+                                Enable or disable the link.
                             </p>
                         </div>
                         <div class="col-lg-7 offset-lg-1">
@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-lg-7 offset-lg-1">
                             <div class="form-group">
-                                <label for="target-url">Target URL</label>
+                                <label for="target-url">Target URL *</label>
                                 <input type="text" class="form-control form-control-lg" id="target-url" name="target-url" placeholder="ex. google.com" value="{{ $link->target }}">
                             </div>
                         </div>
@@ -81,7 +81,7 @@
                             </p>
                         </div>
                         <div class="col-lg-7 offset-lg-1">
-                            <label for="domain">Domain</label>
+                            <label for="domain">Domain *</label>
                             <div class="form-group">
                                 <select class="form-control form-control-lg" id="domain-id" name="domain-id" @if(! auth()->user()->subscribed(\App\User::PRO_PLAN)) disabled @endif>
                                     @foreach($domains as $domain)
@@ -100,6 +100,7 @@
                                     </div>
                                     <input type="text" class="form-control form-control-lg" id="slug" name="slug" placeholder="slug" value="{{ $link->slug }}">
                                 </div>
+                                <small class="text-muted">Leaving this field blank will automatically generate a unique slug.</small>
                             </div>
                         </div>
                     </div>
@@ -134,7 +135,7 @@
                             </div>
                             <div class="col-lg-7 offset-lg-1">
                                 <div class="form-group">
-                                    <label for="main-text">Main Text</label>
+                                    <label for="main-text">Main Text *</label>
                                     <input type="text" class="form-control form-control-lg" id="main-text" name="main-text" value="{{ $link->main_text }}">
                                     <small class="text-muted">This text will appear above the image or video that will be featured during redirect.</small>
                                 </div>
@@ -157,7 +158,7 @@
                             </div>
                             <div class="col-lg-7 offset-lg-1">
                                 <div class="form-group">
-                                    <label for="ad-target">Ad Target URL</label>
+                                    <label for="ad-target">Ad Target URL *</label>
                                     <input type="text" class="form-control form-control-lg" id="ad-target" name="ad-target" placeholder="ex. mystore.com/shop" value="{{ $link->ad_target }}">
                                     <small class="text-muted">This is the link that media and text will link to on the redirect page.</small>
                                 </div>
@@ -170,7 +171,7 @@
                         <div class="row items-push">
                             <div class="col-lg-3">
                                 <p class="text-muted">
-                                    Select the styles you would like your ad to have.
+                                    Select the styles you would like your ad to have. If not entered, the colors will default to #000000 (black).
                                 </p>
                             </div>
                             <div class="col-lg-7 offset-lg-1">
@@ -239,29 +240,29 @@
                         </div>
                         <!-- END Media -->
 
-                        <!-- Delay -->
-                        <h2 class="content-heading text-black">Delay</h2>
+                        <!-- Options -->
+                        <h2 class="content-heading text-black">Options</h2>
                         <div class="row items-push">
                             <div class="col-lg-3">
                                 <p class="text-muted">
-                                    How long would you like the delay to be during the redirect?
+                                    How long would you like the delay to be during the redirect? (maximum 30 seconds)
                                 </p>
                             </div>
                             <div class="col-lg-7 offset-lg-1">
                                 <div class="row">
                                     <div class="form-group col">
-                                        <label for="delay">Delay (Seconds)</label>
+                                        <label for="delay">Delay (Seconds) *</label>
                                         <input type="text" class="form-control form-control-lg" id="delay" name="delay" placeholder="10" value="{{ $link->delay }}">
                                     </div>
                                     <div class="form-group col">
-                                        <label for="show-progress-bar">Show Progress Bar</label>
+                                        <label for="show-progress-bar">Show Progress Bar *</label>
                                         <select class="form-control form-control-lg" id="show-progress-bar" name="show-progress-bar">
                                             <option value="1" @if($link->progress_bar_enabled) selected @endif>Yes</option>
                                             <option value="0" @if(! $link->progress_bar_enabled) selected @endif>No</option>
                                         </select>
                                     </div>
                                     <div class="form-group col">
-                                        <label for="show-skip-button">Show Skip Button</label>
+                                        <label for="show-skip-button">Show Skip Button *</label>
                                         <select class="form-control form-control-lg" id="show-skip-button" name="show-skip-button">
                                             <option value="1" @if($link->skip_button_enabled) selected @endif>Yes</option>
                                             <option value="0" @if(! $link->skip_button_enabled) selected @endif>No</option>
@@ -270,7 +271,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- END Delay -->
+                        <!-- END Options -->
 
                     </div>
 
@@ -279,7 +280,7 @@
                         <div class="col-md-11">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-lg btn-primary float-right ml-3">
-                                    Create Link
+                                    Update Link
                                 </button>
                                 <!-- <a type="submit" class="btn btn-lg btn-outline-primary float-right">
                                     Preview

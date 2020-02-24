@@ -62,6 +62,11 @@ class User extends Authenticatable
         return $this->links()->where('enabled', true)->get();
     }
 
+    public function getInactiveLinks()
+    {
+        return $this->links()->where('enabled', false)->get();
+    }
+
     public function getPlanAttribute()
     {
         return auth()->user()->subscribed(User::PRO_PLAN) ? User::PRO_PLAN : User::FREE_PLAN;

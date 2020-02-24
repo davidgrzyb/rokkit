@@ -13,11 +13,30 @@
             </h3>
         </div>
 
+        @if(Session::has('message'))
+            <div class="row mb-2">
+                <div class="alert alert-success col-md-6 offset-md-3 text-center" role="alert">
+                    {{ Session::get('message') }}
+                </div>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="row mb-2">
+                <div class="alert alert-danger col-md-6 offset-md-3 text-center" role="alert">
+                    @foreach ($errors->all() as $error)
+                        {{ $error }} <br>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <div class="block block-rounded block-fx-shadow">
             <div class="block-content">
-                <form action="be_pages_real_estate_listing_new.html" method="POST" enctype="multipart/form-data" onsubmit="return false;">
+                <form action="{{ url('/links/store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
-                    <!-- Target URL -->
+                    <!-- Target URL Info -->
                     <h2 class="content-heading text-black">Target URL</h2>
                     <div class="row items-push">
                         <div class="col-lg-3">
@@ -27,14 +46,14 @@
                         </div>
                         <div class="col-lg-7 offset-lg-1">
                             <div class="form-group">
-                                <label for="re-listing-name">Target URL</label>
-                                <input type="text" class="form-control form-control-lg" id="re-listing-name" name="re-listing-name" placeholder="ex. google.com">
+                                <label for="target-url">Target URL *</label>
+                                <input type="text" class="form-control form-control-lg" id="target-url" name="target-url" placeholder="ex. google.com">
                             </div>
                         </div>
                     </div>
-                    <!-- END Target URL -->
+                    <!-- END Target URL Info -->
 
-                    <!-- Domain & Link -->
+                    <!-- Domain & Link Info -->
                     <h2 class="content-heading text-black">Domain & Link</h2>
                     <div class="row items-push">
                         <div class="col-lg-3">
@@ -43,33 +62,32 @@
                             </p>
                         </div>
                         <div class="col-lg-7 offset-lg-1">
-                            <label for="re-listing-bedrooms">Domain</label>
+                            <label for="domain">Domain *</label>
                             <div class="form-group">
-                                <select class="form-control form-control-lg" id="re-listing-bedrooms" name="re-listing-bedrooms" disabled>
-                                    <option value="0" selected>rokk.it</option>
-                                    <option value="1">dgrzyb.me</option>
-                                    <option value="2">domain2.com</option>
-                                    <option value="3">wow.me</option>
-                                    <option value="4">goggle.ca</option>
+                                <select class="form-control form-control-lg" id="domain-id" name="domain-id" @if(! auth()->user()->subscribed(\App\User::PRO_PLAN)) disabled @endif>
+                                    @foreach($domains as $domain)
+                                        <option value="{{ $domain->id }}">{{ $domain->name }}</option>
+                                    @endforeach
                                 </select>
-                                <small class="text-muted">The free plan does not include custom domain functionality. <a href="{{ url('/account') }}">Upgrade your plan here.</a></small>
+                                <small class="text-muted">The free plan does not include custom domain functionality. <a href="{{ url('/account') }}" target="_blank">Upgrade your plan here.</a></small>
                             </div>
                             <div class="form-group">
-                                <label for="re-listing-description">Slug</label>
+                                <label for="slug">Slug</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" style="font-size:1.15em;">
-                                            rokk.it/
+                                            <span id="domain-name">{{ $domains->first()->name }}</span>/
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control form-control-lg" id="example-input1-group1" name="example-input1-group1" placeholder="sample">
+                                    <input type="text" class="form-control form-control-lg" id="slug" name="slug" placeholder="slug">
                                 </div>
+                                <small class="text-muted">Leaving this field blank will automatically generate a unique slug.</small>
                             </div>
                         </div>
                     </div>
-                    <!-- END Domain & Link -->
+                    <!-- END Domain & Link Info -->
 
-                    <!-- Advertising -->
+                    <!-- Advertising Info -->
                     <h2 class="content-heading text-black">Advertising</h2>
                     <div class="row items-push">
                         <div class="col-lg-3">
@@ -79,12 +97,12 @@
                         </div>
                         <div class="col-lg-7 offset-lg-1">
                             <label class="css-control css-control-success css-switch">
-                                <input type="checkbox" class="css-control-input" id="advertising-enabled">
+                                <input type="checkbox" class="css-control-input" name="advertising-enabled" id="advertising-enabled" value="true">
                                 <span class="css-control-indicator"></span> <span id="advertising-status">Enabled</span>
                             </label>
                         </div>
                     </div>
-                    <!-- END Advertising -->
+                    <!-- END Advertising Info -->
 
                     <div id="advetising-form">
 
@@ -98,13 +116,13 @@
                             </div>
                             <div class="col-lg-7 offset-lg-1">
                                 <div class="form-group">
-                                    <label for="re-listing-name">Main Text</label>
-                                    <input type="text" class="form-control form-control-lg" id="re-listing-name" name="re-listing-name">
+                                    <label for="main-text">Main Text *</label>
+                                    <input type="text" class="form-control form-control-lg" id="main-text" name="main-text">
                                     <small class="text-muted">This text will appear above the image or video that will be featured during redirect.</small>
                                 </div>
                                 <div class="form-group">
-                                    <label for="re-listing-name">Secondary Description</label>
-                                    <textarea rows="4" class="form-control form-control-lg" id="re-listing-name" name="re-listing-name"></textarea>
+                                    <label for="secondary-text">Secondary Description</label>
+                                    <textarea rows="4" class="form-control form-control-lg" id="secondary-text" name="secondary-text"></textarea>
                                     <small class="text-muted">This text will appear below the image or video that will be featured during redirect.</small>
                                 </div>
                             </div>
@@ -121,8 +139,8 @@
                             </div>
                             <div class="col-lg-7 offset-lg-1">
                                 <div class="form-group">
-                                    <label for="re-listing-name">Ad Target URL</label>
-                                    <input type="text" class="form-control form-control-lg" id="re-listing-name" name="re-listing-name" placeholder="ex. mystore.com/shop">
+                                    <label for="ad-target">Ad Target URL *</label>
+                                    <input type="text" class="form-control form-control-lg" id="ad-target" name="ad-target" placeholder="ex. mystore.com/shop">
                                     <small class="text-muted">This is the link that media and text will link to on the redirect page.</small>
                                 </div>
                             </div>
@@ -134,40 +152,40 @@
                         <div class="row items-push">
                             <div class="col-lg-3">
                                 <p class="text-muted">
-                                    Select the styles you would like your ad to have.
+                                    Select the styles you would like your ad to have. If not entered, the colors will default to #000000 (black).
                                 </p>
                             </div>
                             <div class="col-lg-7 offset-lg-1">
                                 <div class="row">
                                     <div class="form-group col">
                                         <label for="page-bg-color">Page Background Color</label>
-                                        <div class="js-colorpicker input-group js-colorpicker-enabled colorpicker-element" id="page-bg-color-picker" data-format="hex" data-colorpicker-id="2">
-                                            <input type="text" class="form-control" id="example-colorpicker2" name="example-colorpicker2" value="#42a5f5">
+                                        <div class="js-colorpicker input-group js-colorpicker-enabled colorpicker-element" id="page-bg-color-picker" data-format="hex" data-colorpicker-id="1">
+                                            <input type="text" class="form-control" id="page-bg-hex" name="page-bg-hex" placeholder="Hex Code">
                                             <div class="input-group-append">
                                                 <span class="input-group-text colorpicker-input-addon" data-original-title="" title="" tabindex="0">
-                                                    <i style="background: rgb(66, 165, 245);"></i>
+                                                    <i style="background:#42a5f5;"></i>
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group col">
-                                        <label for="re-listing-name">Main Text Color</label>
+                                        <label for="main-text-hex">Main Text Color</label>
                                         <div class="js-colorpicker input-group js-colorpicker-enabled colorpicker-element" id="main-text-color-picker" data-format="hex" data-colorpicker-id="2">
-                                            <input type="text" class="form-control" id="example-colorpicker2" name="example-colorpicker2" value="#42a5f5">
+                                            <input type="text" class="form-control" id="main-text-hex" name="main-text-hex" placeholder="Hex Code">
                                             <div class="input-group-append">
                                                 <span class="input-group-text colorpicker-input-addon" data-original-title="" title="" tabindex="0">
-                                                    <i style="background: rgb(66, 165, 245);"></i>
+                                                    <i style="background:#42a5f5;"></i>
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group col">
-                                        <label for="re-listing-name">Secondary Description Color</label>
+                                        <label for="secondary-text-hex">Secondary Description Color</label>
                                         <div class="js-colorpicker input-group js-colorpicker-enabled colorpicker-element" id="secondary-text-color-picker" data-format="hex" data-colorpicker-id="3">
-                                            <input type="text" class="form-control" id="example-colorpicker2" name="example-colorpicker2" value="#42a5f5">
+                                            <input type="text" class="form-control" id="secondary-text-hex" name="secondary-text-hex" placeholder="Hex Code">
                                             <div class="input-group-append">
                                                 <span class="input-group-text colorpicker-input-addon" data-original-title="" title="" tabindex="0">
-                                                    <i style="background: rgb(66, 165, 245);"></i>
+                                                    <i style="background:#42a5f5;"></i>
                                                 </span>
                                             </div>
                                         </div>
@@ -189,10 +207,10 @@
                                 </p>
                             </div>
                             <div class="col-lg-7 offset-lg-1">
-                                <div class="form-group">
-                                    <label for="re-listing-name">Image Upload</label>
+                                <div class="form-group pt-30">
+                                    <label for="re-listing-name">Upload Image</label>
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input js-custom-file-input-enabled" id="example-file-input-custom" name="example-file-input-custom" data-toggle="custom-file-input">
+                                        <input type="file" class="custom-file-input js-custom-file-input-enabled" id="image" name="image" data-toggle="custom-file-input">
                                         <label class="custom-file-label" for="example-file-input-custom">Choose file</label>
                                     </div>
                                 </div>
@@ -200,38 +218,38 @@
                         </div>
                         <!-- END Media -->
 
-                        <!-- Delay -->
-                        <h2 class="content-heading text-black">Delay</h2>
+                        <!-- Options -->
+                        <h2 class="content-heading text-black">Options</h2>
                         <div class="row items-push">
                             <div class="col-lg-3">
                                 <p class="text-muted">
-                                    How long would you like the delay to be during the redirect?
+                                    How long would you like the delay to be during the redirect? (maximum 30 seconds)
                                 </p>
                             </div>
                             <div class="col-lg-7 offset-lg-1">
                                 <div class="row">
                                     <div class="form-group col">
-                                        <label for="re-listing-name">Delay (Seconds)</label>
-                                        <input type="text" class="form-control form-control-lg" id="re-listing-name" name="re-listing-name" placeholder="10">
+                                        <label for="delay">Delay (Seconds) *</label>
+                                        <input type="text" class="form-control form-control-lg" id="delay" name="delay" placeholder="10">
                                     </div>
                                     <div class="form-group col">
-                                        <label for="re-listing-name">Show Progress Bar</label>
-                                        <select class="form-control form-control-lg" id="re-listing-bedrooms" name="re-listing-bedrooms">
-                                            <option value="0" selected>Yes</option>
-                                            <option value="1">No</option>
+                                        <label for="show-progress-bar">Show Progress Bar *</label>
+                                        <select class="form-control form-control-lg" id="show-progress-bar" name="show-progress-bar">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
                                         </select>
                                     </div>
                                     <div class="form-group col">
-                                        <label for="re-listing-name">Show Skip Button</label>
-                                        <select class="form-control form-control-lg" id="re-listing-bedrooms" name="re-listing-bedrooms">
-                                            <option value="0" selected>Yes</option>
-                                            <option value="1">No</option>
+                                        <label for="show-skip-button">Show Skip Button *</label>
+                                        <select class="form-control form-control-lg" id="show-skip-button" name="show-skip-button">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- END Delay -->
+                        <!-- END Options -->
 
                     </div>
 
@@ -268,6 +286,9 @@
         });
     </script>
     <script>
+        $('#advetising-form').hide();
+        $('#advertising-status').text('Disabled');
+
         $('#advertising-enabled').change(function () {
             if (this.checked) {
                 $('#advetising-form').show();
@@ -277,25 +298,36 @@
                 $('#advetising-form').hide();
                 $('#advertising-status').text('Disabled');
             }
-        }).change()
+        });
+
+        $('#enabled').change(function () {
+            if (this.checked) {
+                $('#enabled-status').text('Enabled');
+            }
+            else {
+                $('#enabled-status').text('Disabled');
+            }
+        });
+
+        $('#domain-id').change(function () {
+            $('#domain-name').text($('#domain-id option:selected').text())
+        });
     </script>
     <script>
         $(function() {
             $('#page-bg-color-picker').colorpicker({
                 popover: true,
-                // inline: true,
                 container: '#demo'
+                // default: "42a5f5",
             });
 
             $('#main-text-color-picker').colorpicker({
                 popover: true,
-                // inline: true,
                 container: '#demo'
             });
 
             $('#secondary-text-color-picker').colorpicker({
                 popover: true,
-                // inline: true,
                 container: '#demo'
             });
         });

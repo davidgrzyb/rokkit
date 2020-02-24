@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\CreateLinkRequest;
 use App\Http\Requests\UpdateLinkRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
 class LinkController extends Controller
 {
@@ -37,6 +39,12 @@ class LinkController extends Controller
         return redirect()->to('//'.$link->target);
     }
 
+    public function create()
+    {
+        $domains = auth()->user()->domains;
+        return view('links.create')->withDomains($domains);
+    }
+
     public function view(int $id)
     {
         $link = Link::findOrFail($id);
@@ -46,54 +54,42 @@ class LinkController extends Controller
             ->withDomains($domains);
     }
 
-    public function create(CreateLinkRequest $request)
+    public function store(CreateLinkRequest $request)
     {
-        $link = Link::findOrFail($request->input('link-id'));
-
-        if (! $this->checkSlug($link, $request->input('slug'))) {
+        if ($request->input('slug') &&
+            ! $this->checkSlug($request->input('slug'), $request->input('domain-id'))) {
             return redirect()
-                ->route('links.view', [$link->id])
+                ->route('links.create')
                 ->withErrors(['message' => 'The chosen slug is already taken.']);
         }
-        
-        $link->fill([
-            'enabled'   => $request->input('enabled') === 'on',
+
+        $link = Link::create([
+            'enabled'   => true,
+            'user_id'   => auth()->user()->id,
             'domain_id' => $request->input('domain-id'),
             'slug'      => $request->input('slug') ?? Link::generateSlug(),
             'target'    => $this->sanitizeUrl($request->input('target-url')),
+            'ad_target' => '',
+            'delay'     => 0,
         ]);
 
-        if ($request->input('advertising-enabled') !== 'true') {
-            $link->resetAdvertisementColumns()->save();
-
-            return redirect()
-                ->route('links.view', [$link->id])
-                ->withMessage('Link updated successfully!');
+        if ($request->input('advertising-enabled') === 'true') {
+            $image = $this->saveImage($link, $request->file('image'));
+            $link->image = $image ? $image : $link->image;
+            $link = $this->fillAdvertisingData($link, $request);
         }
 
-        $image = $this->saveImage($link, $request->file('image'));
+        $link->save();
 
-        $link->fill([
-            'image'                => $image ? $image : $link->image,
-            'main_text'            => $request->input('main-text'),
-            'secondary_text'       => $request->input('secondary-text'),
-            'ad_target'            => $this->sanitizeUrl($request->input('ad-target')),
-            'delay'                => $request->input('delay'),
-            'progress_bar_enabled' => $request->input('show-progress-bar'),
-            'skip_button_enabled'  => $request->input('show-skip-button'),
-            'bg_color'             => $request->input('page-bg-hex') ?? '#000000',
-            'main_text_color'      => $request->input('main-text-hex') ?? '#000000',
-            'secondary_text_color' => $request->input('secondary-text-hex') ?? '#000000',
-        ])->save();
-
-        return redirect()->route('links.view', [$link->id])->withMessage('Link updated successfully!');
+        return redirect()->route('links.index', [$link->id])->withMessage('Your link has been created successfully!');
     }
 
     public function update(UpdateLinkRequest $request)
     {
         $link = Link::findOrFail($request->input('link-id'));
 
-        if (! $this->checkSlug($link, $request->input('slug'))) {
+        if ($request->input('slug') && 
+            ! $this->checkSlug($request->input('slug'), $request->input('domain-id'), $link)) {
             return redirect()
                 ->route('links.view', [$link->id])
                 ->withErrors(['message' => 'The chosen slug is already taken.']);
@@ -106,18 +102,22 @@ class LinkController extends Controller
             'target'    => $this->sanitizeUrl($request->input('target-url')),
         ]);
 
-        if ($request->input('advertising-enabled') !== 'true') {
-            $link->resetAdvertisementColumns()->save();
-
-            return redirect()
-                ->route('links.view', [$link->id])
-                ->withMessage('Link updated successfully!');
+        if ($request->input('advertising-enabled') === 'true') {
+            $image = $this->saveImage($link, $request->file('image'));
+            $link->image = $image ? $image : $link->image;
+            $link = $this->fillAdvertisingData($link, $request);
+        } else {
+            $link->resetAdvertisementColumns();
         }
 
-        $image = $this->saveImage($link, $request->file('image'));
+        $link->save();
 
+        return redirect()->route('links.view', [$link->id])->withMessage('Link updated successfully!');
+    }
+
+    protected function fillAdvertisingData(Link $link, FormRequest $request)
+    {
         $link->fill([
-            'image'                => $image ? $image : $link->image,
             'main_text'            => $request->input('main-text'),
             'secondary_text'       => $request->input('secondary-text'),
             'ad_target'            => $this->sanitizeUrl($request->input('ad-target')),
@@ -127,12 +127,12 @@ class LinkController extends Controller
             'bg_color'             => $request->input('page-bg-hex') ?? '#000000',
             'main_text_color'      => $request->input('main-text-hex') ?? '#000000',
             'secondary_text_color' => $request->input('secondary-text-hex') ?? '#000000',
-        ])->save();
+        ]);
 
-        return redirect()->route('links.view', [$link->id])->withMessage('Link updated successfully!');
+        return $link;
     }
 
-    protected function saveImage($link, $image)
+    protected function saveImage(Link $link, $image)
     {
         if (! $image) {
             return null;
@@ -140,7 +140,7 @@ class LinkController extends Controller
 
         $location = sprintf(
             '%s/%s-%s.%s',
-            config('rokkit.advertisement-storage-directory'),
+            config('rokkit.advertisement_storage_directory'),
             $link->slug,
             now()->timestamp,
             $image->getClientOriginalExtension()
@@ -151,17 +151,13 @@ class LinkController extends Controller
         return $location;
     }
 
-    protected function checkSlug(Link $link, string $slug)
+    protected function checkSlug(string $slug, int $domainId, $link = null)
     {
-        if ($link->slug === $slug) {
+        if ($link && $link->slug === $slug) {
             return true;
         }
 
-        if (! Link::where('slug', $slug)->exists()) {
-            return true;
-        }
-
-        return false;
+        return ! Link::where('domain_id', $domainId)->where('slug', $slug)->exists();
     }
 
     protected function sanitizeUrl($url)
