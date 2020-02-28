@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Link;
+use App\Click;
 use App\Redirect;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -19,9 +20,11 @@ class LinkController extends Controller
         return view('links.index');
     }
 
-    public function redirect(string $slug)
+    public function redirect($domain, string $slug)
     {
-        $link = Link::where('slug', $slug)->firstOrFail();
+        $link = Link::whereHas('domain', function ($query) use ($domain) {
+            return $query->where('name', $domain);
+        })->where('slug', $slug)->firstOrFail();
 
         if (! $link->isEnabled()) {
             return redirect('/');
@@ -113,6 +116,17 @@ class LinkController extends Controller
         $link->save();
 
         return redirect()->route('links.view', [$link->id])->withMessage('Link updated successfully!');
+    }
+
+    public function redirectToAdvertisement(string $domain, int $id)
+    {
+        $link = Link::findOrFail($id);
+
+        // Create record of advertising click.
+        Click::create(['link_id' => $link->id]);
+
+        // If link is just a normal redirect, redirect to target.
+        return redirect()->to('//'.$link->ad_target);
     }
 
     protected function fillAdvertisingData(Link $link, FormRequest $request)

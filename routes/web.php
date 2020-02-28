@@ -33,10 +33,10 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('/account', 'AccountController@index');
     Route::post('/account/update', 'AccountController@update');
     Route::post('/account/upgrade', 'AccountController@upgrade');
+    Route::post('/account/downgrade', 'AccountController@downgrade');
 });
 
-Route::get('/{slug}', 'LinkController@redirect')->middleware(App\Http\Middleware\CheckRedirect::class);
-
-Route::group(['domain' => '{domain}'], function() {
-
+Route::group(['middleware' => 'check.redirect', 'domain' => '{domain}'], function() {
+    Route::get('/{slug}', 'LinkController@redirect');
+    Route::get('/ad/{id}', 'LinkController@redirectToAdvertisement');
 });

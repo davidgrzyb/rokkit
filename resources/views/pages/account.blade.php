@@ -65,12 +65,15 @@
                             <p>
                                 <strong>Plan:</strong> {{ ucfirst(auth()->user()->plan) }} Plan
                             </p>
-                            <button type="button" class="btn btn-sm btn-alt-warning mr-5">
-                                Downgrade
-                            </button>
-                            <button type="button" class="btn btn-sm btn-alt-danger">
+                            <form action="{{ url('/account/downgrade') }}" method="post">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-alt-warning mr-5">
+                                    Downgrade
+                                </button>
+                            </form>
+                            <!-- <button type="button" class="btn btn-sm btn-alt-danger">
                                 Close Account
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -257,54 +260,54 @@
     <script src="https://js.stripe.com/v3/"></script>
 
     <script>
-        const stripe = Stripe("{{ config('services.stripe.key') }}");
+        window.onload = function() {
+            const stripe = Stripe("{{ config('services.stripe.key') }}");
 
-        const elements = stripe.elements();
-        const cardElement = elements.create('card');
+            const elements = stripe.elements();
+            const cardElement = elements.create('card');
 
-        cardElement.mount('#card-element');
-    </script>
+            cardElement.mount('#card-element');
 
-    <script>
-        const cardHolderName = document.getElementById('card-holder-name');
-        const cardButton = document.getElementById('card-button');
-        const clientSecret = cardButton.dataset.secret;
+            const cardHolderName = document.getElementById('card-holder-name');
+            const cardButton = document.getElementById('card-button');
+            const clientSecret = cardButton.dataset.secret;
 
-        cardButton.addEventListener('click', async (e) => {
-            const { setupIntent, error } = await stripe.confirmCardSetup(
-                clientSecret, {
-                    payment_method: {
-                        card: cardElement,
-                        billing_details: { name: cardHolderName.value }
+            cardButton.addEventListener('click', async (e) => {
+                const { setupIntent, error } = await stripe.confirmCardSetup(
+                    clientSecret, {
+                        payment_method: {
+                            card: cardElement,
+                            billing_details: { name: cardHolderName.value }
+                        }
                     }
+                );
+
+                if (error) {
+                    console.log('error');
+                } else {
+                    stripePaymentHandler(setupIntent);
                 }
-            );
+            });
 
-            if (error) {
-                console.log('error');
-            } else {
-                stripePaymentHandler(setupIntent);
-            }
-        });
-
-        // Handle form submission.
-        var form = document.getElementById('payment-form');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-        });
-
-        // Submit the form with the token ID.
-        function stripePaymentHandler(setupIntent) {
-            // Insert the token ID into the form so it gets submitted to the server
+            // Handle form submission.
             var form = document.getElementById('payment-form');
-            var hiddenInput = document.createElement('input');
-            hiddenInput.setAttribute('type', 'hidden');
-            hiddenInput.setAttribute('name', 'stripePaymentMethod');
-            hiddenInput.setAttribute('value', setupIntent.payment_method);
-            form.appendChild(hiddenInput);
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+            });
 
-            // Submit the form
-            form.submit();
-        }
+            // Submit the form with the token ID.
+            function stripePaymentHandler(setupIntent) {
+                // Insert the token ID into the form so it gets submitted to the server
+                var form = document.getElementById('payment-form');
+                var hiddenInput = document.createElement('input');
+                hiddenInput.setAttribute('type', 'hidden');
+                hiddenInput.setAttribute('name', 'stripePaymentMethod');
+                hiddenInput.setAttribute('value', setupIntent.payment_method);
+                form.appendChild(hiddenInput);
+
+                // Submit the form
+                form.submit();
+            }
+        };
     </script>
 @endsection

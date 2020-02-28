@@ -52,4 +52,14 @@ class AccountController extends Controller
 
         return redirect('/account');
     }
+
+    public function downgrade(Request $request)
+    {
+        if (auth()->user()->subscribed(User::PRO_PLAN)) {
+            auth()->user()->subscription(User::PRO_PLAN)->cancelNow();
+            Session::flash('message', 'Your account has been downgraded to the free plan 😔');
+        }
+
+        return redirect('/account');
+    }
 }

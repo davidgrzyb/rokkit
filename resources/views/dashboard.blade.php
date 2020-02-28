@@ -87,5 +87,153 @@
 
 @section('js_after')
     <script src="{{ asset('/js/plugins/chartjs/Chart.bundle.min.js') }}"></script>
-    <script src="{{ asset('/js/pages/dashboard_charts.min.js') }}"></script>
+    <script>
+        ! function(e) {
+            var t = {};
+
+            function r(o) {
+                if (t[o]) return t[o].exports;
+                var n = t[o] = {
+                    i: o,
+                    l: !1,
+                    exports: {}
+                };
+                return e[o].call(n.exports, n, n.exports, r), n.l = !0, n.exports
+            }
+            r.m = e, r.c = t, r.d = function(e, t, o) {
+                r.o(e, t) || Object.defineProperty(e, t, {
+                    enumerable: !0,
+                    get: o
+                })
+            }, r.r = function(e) {
+                "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, {
+                    value: "Module"
+                }), Object.defineProperty(e, "__esModule", {
+                    value: !0
+                })
+            }, r.t = function(e, t) {
+                if (1 & t && (e = r(e)), 8 & t) return e;
+                if (4 & t && "object" == typeof e && e && e.__esModule) return e;
+                var o = Object.create(null);
+                if (r.r(o), Object.defineProperty(o, "default", {
+                        enumerable: !0,
+                        value: e
+                    }), 2 & t && "string" != typeof e)
+                    for (var n in e) r.d(o, n, function(t) {
+                        return e[t]
+                    }.bind(null, n));
+                return o
+            }, r.n = function(e) {
+                var t = e && e.__esModule ? function() {
+                    return e.default
+                } : function() {
+                    return e
+                };
+                return r.d(t, "a", t), t
+            }, r.o = function(e, t) {
+                return Object.prototype.hasOwnProperty.call(e, t)
+            }, r.p = "", r(r.s = 50)
+        }({
+            50: function(e, t, r) {
+                e.exports = r(51)
+            },
+            51: function(e, t) {
+                function r(e, t) {
+                    for (var r = 0; r < t.length; r++) {
+                        var o = t[r];
+                        o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, o.key, o)
+                    }
+                }
+                var o = function() {
+                    function e() {
+                        ! function(e, t) {
+                            if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function")
+                        }(this, e)
+                    }
+                    var t, o, n;
+                    return t = e, n = [{
+                        key: "initMinimalChartJS",
+                        value: function() {
+                            Chart.defaults.global.defaultFontColor = "#7c7c7c", Chart.defaults.scale.gridLines.color = "transparent", Chart.defaults.scale.gridLines.zeroLineColor = "transparent", Chart.defaults.scale.display = !1, Chart.defaults.scale.ticks.beginAtZero = !0, Chart.defaults.global.elements.line.borderWidth = 2, Chart.defaults.global.elements.point.radius = 3, Chart.defaults.global.elements.point.hoverRadius = 5, Chart.defaults.global.tooltips.cornerRadius = 3, Chart.defaults.global.legend.display = !1;
+                            var e = jQuery(".js-chartjs-minimal-lines"),
+                                t = jQuery(".js-chartjs-minimal-lines2");
+                            e.length && new Chart(e, {
+                                type: "line",
+                                data: {
+                                    labels: {!! json_encode($redirectsGraphData['labels']) !!},
+                                    datasets: [{
+                                        label: "This Week",
+                                        fill: !0,
+                                        backgroundColor: "rgba(131,191,240,.2)",
+                                        borderColor: "rgba(131,191,240,.6)",
+                                        pointBackgroundColor: "rgba(131,191,240,.6)",
+                                        pointBorderColor: "#fff",
+                                        pointHoverBackgroundColor: "#fff",
+                                        pointHoverBorderColor: "rgba(92,85,75,.4)",
+                                        data: {!! json_encode($redirectsGraphData['data']) !!}
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                suggestedMax: {!! max($redirectsGraphData['data']) !!}
+                                            }
+                                        }]
+                                    },
+                                    tooltips: {
+                                        callbacks: {
+                                            label: function(e, t) {
+                                                return " " + e.yLabel + " Redirects"
+                                            }
+                                        }
+                                    }
+                                }
+                            }), t.length && new Chart(t, {
+                                type: "line",
+                                data: {
+                                    labels: {!! json_encode($adClicksGraphData['labels']) !!},
+                                    datasets: [{
+                                        label: "This Week",
+                                        fill: !0,
+                                        backgroundColor: "rgba(131,191,240,.2)",
+                                        borderColor: "rgba(131,191,240,.6)",
+                                        pointBackgroundColor: "rgba(131,191,240,.6)",
+                                        pointBorderColor: "#fff",
+                                        pointHoverBackgroundColor: "#fff",
+                                        pointHoverBorderColor: "rgba(146,170,90,.4)",
+                                        data: {!! json_encode($adClicksGraphData['data']) !!}
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                suggestedMax: {!! max($adClicksGraphData['data']) !!}
+                                            }
+                                        }]
+                                    },
+                                    tooltips: {
+                                        callbacks: {
+                                            label: function(e, t) {
+                                                return " " + e.yLabel + " Clicks"
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    }, {
+                        key: "init",
+                        value: function() {
+                            this.initMinimalChartJS()
+                        }
+                    }], (o = null) && r(t.prototype, o), n && r(t, n), e
+                }();
+                jQuery((function() {
+                    o.init()
+                }))
+            }
+        });
+    </script>
 @endsection

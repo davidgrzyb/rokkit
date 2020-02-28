@@ -16,8 +16,22 @@ class CheckRedirect
      */
     public function handle($request, Closure $next)
     {
+        $id = $request->id;
+        $slug = $request->slug;
+        $domain = $request->domain;
+
         $link = Link::query()
-            ->where('slug', $request->path())
+            ->when($slug, function ($query) use ($slug) {
+                return $query->where('slug', $slug);
+            })
+            ->when($id, function ($query) use ($id) {
+                return $query->where('id', $id);
+            })
+            ->when($domain, function ($query) use ($domain) {
+                return $query->whereHas('domain', function ($query) use ($domain) {
+                    return $query->where('name', $domain);
+                });
+            })
             ->with([
                 'user',
                 'domain',

@@ -74,7 +74,7 @@ class RegisterController extends Controller
         $user->createAsStripeCustomer();
 
         Domain::create([
-            'name' => 'rokk.it',
+            'name' => config('app.url'),
             'user_id' => $user->id,
         ]);
 
