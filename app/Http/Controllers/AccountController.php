@@ -41,6 +41,7 @@ class AccountController extends Controller
     public function upgrade(Request $request)
     {
         $user = auth()->user();
+        $user->createAsStripeCustomer();
         $method = $user->updateDefaultPaymentMethod($request->get('stripePaymentMethod'));
 
         if (! $user->subscribed(User::PRO_PLAN)) {
