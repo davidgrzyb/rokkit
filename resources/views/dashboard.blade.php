@@ -177,7 +177,7 @@
                                     scales: {
                                         yAxes: [{
                                             ticks: {
-                                                suggestedMax: {!! max($redirectsGraphData['data']) !!}
+                                                suggestedMax: {!! max($redirectsGraphData['data']) === 0 ? 1 : max($redirectsGraphData['data']) !!}
                                             }
                                         }]
                                     },
@@ -209,7 +209,7 @@
                                     scales: {
                                         yAxes: [{
                                             ticks: {
-                                                suggestedMax: {!! max($adClicksGraphData['data']) !!}
+                                                suggestedMax: {!! max($redirectsGraphData['data']) === 0 ? 1 : max($redirectsGraphData['data']) !!}
                                             }
                                         }]
                                     },

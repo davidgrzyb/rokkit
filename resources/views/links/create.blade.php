@@ -235,15 +235,15 @@
                                     <div class="form-group col">
                                         <label for="show-progress-bar">Show Progress Bar *</label>
                                         <select class="form-control form-control-lg" id="show-progress-bar" name="show-progress-bar">
-                                            <option value="1">Yes</option>
                                             <option value="0">No</option>
+                                            <option value="1">Yes</option>
                                         </select>
                                     </div>
                                     <div class="form-group col">
                                         <label for="show-skip-button">Show Skip Button *</label>
                                         <select class="form-control form-control-lg" id="show-skip-button" name="show-skip-button">
-                                            <option value="1">Yes</option>
                                             <option value="0">No</option>
+                                            <option value="1">Yes</option>
                                         </select>
                                     </div>
                                 </div>

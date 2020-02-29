@@ -74,7 +74,7 @@ class RegisterController extends Controller
         $user->createAsStripeCustomer();
 
         Domain::create([
-            'name' => config('app.url'),
+            'name' => config('rokkit.default_domain'),
             'user_id' => $user->id,
         ]);
 
