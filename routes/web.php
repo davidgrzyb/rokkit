@@ -13,6 +13,12 @@
 
 Route::view('/', 'landing');
 
+Route::get('/test', function () {
+    $link = App\Link::findOrFail(12);
+
+    return view('links.redirect')->withLink($link);
+});
+
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function()

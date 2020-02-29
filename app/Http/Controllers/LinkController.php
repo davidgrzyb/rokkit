@@ -7,6 +7,7 @@ use App\Click;
 use App\Redirect;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\CreateLinkRequest;
@@ -31,11 +32,13 @@ class LinkController extends Controller
         }
 
         // Create record of redirection.
-        Redirect::create(['link_id' => $link->id]);
+        if (! Auth::check() || $link->user_id !== Auth::id()) {
+            Redirect::create(['link_id' => $link->id]);
+        }
 
         // Redirect to advertising page.
         if ($link->ad_target) {
-            return view('links.advertisement')->withLink($link);
+            return view('links.redirect')->withLink($link);
         }
 
         // If link is just a normal redirect, redirect to target.
@@ -50,7 +53,7 @@ class LinkController extends Controller
 
     public function view(int $id)
     {
-        $link = Link::findOrFail($id);
+        $link = Link::where('user_id', auth()->user()->id)->findOrFail($id);
         $domains = auth()->user()->domains;
         return view('links.view')
             ->withLink($link)
@@ -89,7 +92,9 @@ class LinkController extends Controller
 
     public function update(UpdateLinkRequest $request)
     {
-        $link = Link::findOrFail($request->input('link-id'));
+        $link = Link::query()
+            ->where('user_id', auth()->user()->id)
+            ->findOrFail($request->input('link-id'));
 
         if ($request->input('slug') && 
             ! $this->checkSlug($request->input('slug'), $request->input('domain-id'), $link)) {
@@ -120,10 +125,14 @@ class LinkController extends Controller
 
     public function redirectToAdvertisement(string $domain, int $id)
     {
-        $link = Link::findOrFail($id);
+        $link = Link::whereHas('domain', function ($query) use ($domain) {
+            return $query->where('name', $domain);
+        })->findOrFail($id);
 
         // Create record of advertising click.
-        Click::create(['link_id' => $link->id]);
+        if (! Auth::check() || $link->user_id !== Auth::id()) {
+            Click::create(['link_id' => $link->id]);
+        }
 
         // If link is just a normal redirect, redirect to target.
         return redirect()->to('//'.$link->ad_target);
@@ -138,7 +147,7 @@ class LinkController extends Controller
             'delay'                => $request->input('delay'),
             'progress_bar_enabled' => $request->input('show-progress-bar'),
             'skip_button_enabled'  => $request->input('show-skip-button'),
-            'bg_color'             => $request->input('page-bg-hex') ?? '#000000',
+            'bg_color'             => $request->input('page-bg-hex') ?? '#f0f2f5',
             'main_text_color'      => $request->input('main-text-hex') ?? '#000000',
             'secondary_text_color' => $request->input('secondary-text-hex') ?? '#000000',
         ]);

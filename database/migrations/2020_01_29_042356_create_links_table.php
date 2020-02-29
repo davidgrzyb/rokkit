@@ -25,8 +25,8 @@ class CreateLinksTable extends Migration
             $table->string('secondary_text', 500)->nullable();
             $table->string('ad_target', 500);
             $table->integer('delay');
-            $table->boolean('progress_bar_enabled')->default(true);
-            $table->boolean('skip_button_enabled')->default(true);
+            $table->boolean('progress_bar_enabled')->default(false);
+            $table->boolean('skip_button_enabled')->default(false);
             $table->string('bg_color', 20)->nullable();
             $table->string('main_text_color', 20)->nullable();
             $table->string('secondary_text_color', 20)->nullable();

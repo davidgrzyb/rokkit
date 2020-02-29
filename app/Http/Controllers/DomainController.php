@@ -15,7 +15,7 @@ class DomainController extends Controller
 
     public function view(int $id)
     {
-        $domain = Domain::findOrFail($id);
+        $domain = Domain::where('user_id', auth()->user()->id)->findOrFail($id);
         return view('domains.view')->withDomain($domain);
     }
 
@@ -45,7 +45,9 @@ class DomainController extends Controller
 
     public function delete(Request $request)
     {
-        $domain = Domain::findOrFail($request->input('id'));
+        $domain = Domain::query()
+            ->where('user_id', auth()->user()->id)
+            ->findOrFail($request->input('id'));
 
         if ($domain->isDefault()) {
             return redirect('/domains');
