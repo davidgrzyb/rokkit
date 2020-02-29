@@ -38,7 +38,7 @@
     </head>
     <body>
         <div class="content-header-item pl-20 pt-20">
-            <a class="link-effect font-w700" href="{{ url('/dashboard') }}">
+            <a class="link-effect font-w700" href="{{ url('/') }}">
                 <i class="si si-rocket text-primary"></i>
                 <span class="font-size-xl text-dual-primary-dark">rokk</span><span class="font-size-xl text-primary">it</span>
             </a>
@@ -61,7 +61,7 @@
                     <div class="row">
                         <div class="col-md-12 text-center">
                             <a target="_blank" href="{{ url('/ad', [$link->id]) }}">
-                                <img class="img img-fluid" src="{{ asset($link->image) }}">
+                                <img class="img img-fluid" src="{{ asset('storage/'.$link->image) }}">
                             </a>
                         </div>
                     </div>

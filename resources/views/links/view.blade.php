@@ -227,7 +227,7 @@
                             </div>
                             <div class="col-lg-7 offset-lg-1">
                                 @if($link->image)
-                                    <img class="pb-30" style="max-width:100%;" src="{{ asset($link->image) }}">
+                                    <img class="pb-30" style="max-width:100%;" src="{{ asset('storage/'.$link->image) }}">
                                 @endif
                                 <div class="form-group">
                                     <label for="re-listing-name">@if($link->image) Replace Image @else Upload Image @endif</label>
