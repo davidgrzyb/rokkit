@@ -69,7 +69,7 @@ class User extends Authenticatable
 
     public function getPlanAttribute()
     {
-        return auth()->user()->subscribed(User::PRO_PLAN) ? User::PRO_PLAN : User::FREE_PLAN;
+        return $this->subscribed(User::PRO_PLAN) ? User::PRO_PLAN : User::FREE_PLAN;
     }
 
     public function isInGoodStanding()

@@ -106,7 +106,7 @@
         window.onload=function(){
             var delay = {{ json_encode($link->delay) }};
             var delay_multiple = delay * 1000;
-            var target = "{{ url('/ad', [$link->id]) }}";
+            var target = "//{{ $link->target }}";
             var timeleft = delay;
 
             var downloadTimer = setInterval(function () {
