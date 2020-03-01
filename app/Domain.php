@@ -37,7 +37,7 @@ class Domain extends Model
             return true;
         }
 
-        $records = collect(dns_get_record("dgrzyb.me"));
+        $records = collect(dns_get_record($this->name));
         if ($records->where('type', 'A') === config('rokkit.default_domain')) {
             return true;
         }

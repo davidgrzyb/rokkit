@@ -5,15 +5,28 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class AccountController extends Controller
 {
     public function index()
     {
-        return view('pages.account')->with([
-            'intent' => auth()->user()->createSetupIntent(),
-        ]);
+        $redirectsThisMonth = Cache::remember('redirects-this-month-'.auth()->user()->id, now()->addMinutes(5), function () {
+            return auth()->user()->getRedirectsThisMonth();
+        });
+
+        $planLimit = Cache::remember('plan-limit-'.auth()->user()->id, now()->addMinutes(5), function () {
+            return auth()->user()->getPlanLimit();
+        });
+
+        $progress = round($redirectsThisMonth / $planLimit);
+
+        return view('pages.account')
+            ->withIntent(auth()->user()->createSetupIntent())
+            ->withRedirectsThisMonth($redirectsThisMonth)
+            ->withPlanLimit($planLimit)
+            ->withProgress($progress);
     }
 
     public function update(Request $request)

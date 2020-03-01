@@ -11,13 +11,7 @@
 |
 */
 
-Route::view('/', 'landing');
-
-Route::get('/test', function () {
-    $link = App\Link::findOrFail(12);
-
-    return view('links.redirect')->withLink($link);
-});
+Route::get('/', 'HomeController@index');
 
 Auth::routes();
 
@@ -43,6 +37,6 @@ Route::group(['middleware' => 'auth'], function()
 });
 
 Route::group(['middleware' => 'check.redirect', 'domain' => '{domain}'], function() {
-    Route::get('/{slug}', 'LinkController@redirect');
     Route::get('/ad/{id}', 'LinkController@redirectToAdvertisement');
+    Route::get('/{slug}', 'LinkController@redirect');
 });

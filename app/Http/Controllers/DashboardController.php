@@ -11,12 +11,16 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $activeLinksCount = number_format(auth()->user()->getActiveLinks()->count());
-        $inactiveLinksCount = number_format(auth()->user()->getInactiveLinks()->count());
-        $redirectsThisMonthCount = number_format(auth()->user()->getRedirectsThisMonth());
-        $clicksThisMonthCount = number_format(auth()->user()->getClicksThisMonth());
+        $countData = Cache::remember('dashboard-count-values-standing-'.auth()->user()->id, now()->addMinutes(5), function () {
+            return [
+                'active_links' => number_format(auth()->user()->getActiveLinks()->count()),
+                'inactive_links' => number_format(auth()->user()->getInactiveLinks()->count()),
+                'redirects_count' => number_format(auth()->user()->getRedirectsThisMonth()),
+                'clicks_count' => number_format(auth()->user()->getClicksThisMonth()),
+            ];
+        });
 
-        $graphData = Cache::remember('dashboard-'.auth()->user()->id, now()->addMinutes(5), function () {
+        $graphData = Cache::remember('dashboard-graph-data-'.auth()->user()->id, now()->addMinutes(5), function () {
             $redirects = Redirect::query()
                 ->whereHas('link', function ($query) {
                     return $query->where('user_id', auth()->user()->id);
@@ -65,10 +69,10 @@ class DashboardController extends Controller
         });
 
         return view('dashboard', [
-            'activeLinksCount' => $activeLinksCount,
-            'inactiveLinksCount' => $inactiveLinksCount,
-            'redirectsThisMonthCount' => $redirectsThisMonthCount,
-            'clicksThisMonthCount' => $clicksThisMonthCount,
+            'activeLinksCount' => $countData['active_links'],
+            'inactiveLinksCount' => $countData['inactive_links'],
+            'redirectsThisMonthCount' => $countData['redirects_count'],
+            'clicksThisMonthCount' => $countData['clicks_count'],
             'redirectsGraphData' => $graphData['redirects'],
             'adClicksGraphData' => $graphData['clicks'],
         ]);

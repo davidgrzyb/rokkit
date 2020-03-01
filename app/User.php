@@ -74,7 +74,9 @@ class User extends Authenticatable
 
     public function isInGoodStanding()
     {
-        return $this->getRedirectsLeft() > 0;
+        return Cache::remember('account-standing-'.$this->id, now()->addMinutes(30), function () {
+            return $this->getRedirectsLeft() > 0;
+        });
     }
 
     public function getPlanLimit()
@@ -84,23 +86,17 @@ class User extends Authenticatable
 
     public function getRedirectsLeft()
     {
-        return Cache::remember('redirects_left_'.$this->id, now()->addMinutes(3), function () {
-            return $this->getPlanLimit() - $this->getRedirectsThisMonth();
-        });
+        return $this->getPlanLimit() - $this->getRedirectsThisMonth();
     }
 
     public function getClicksThisMonth()
     {
-        return Cache::remember('clicks_this_month_'.$this->id, now()->addMinutes(3), function () {
-            return $this->links()->withCount('clicks')->get()->sum('clicks_count');
-        });
+        return $this->links()->withCount('clicks')->get()->sum('clicks_count');
     }
 
     public function getRedirectsThisMonth()
     {
-        return Cache::remember('redirects_this_month_'.$this->id, now()->addMinutes(3), function () {
-            return $this->links()->withCount('redirects')->get()->sum('redirects_count');
-        });
+        return $this->links()->withCount('redirects')->get()->sum('redirects_count');
     }
 
     public function getSubscriptionRenewalDate($plan = self::PRO_PLAN)

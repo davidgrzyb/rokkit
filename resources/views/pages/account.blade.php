@@ -20,10 +20,6 @@
             </div>
         @endif
 
-        @php
-            $progress = round(auth()->user()->getRedirectsThisMonth() / auth()->user()->getPlanLimit());
-        @endphp
-
         @if(! auth()->user()->subscribed(\App\User::PRO_PLAN))
             <div class="block">
                 <div class="block-header block-header-default">
@@ -38,7 +34,7 @@
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: {{ $progress }}%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <p class="font-size-sm font-w500 mb-0">
-                                <span class="font-w600">{{ number_format(auth()->user()->getRedirectsThisMonth()) }}</span> of <span class="font-w600">{{ number_format(auth()->user()->getPlanLimit()) }}</span> redirects per month.
+                                <span class="font-w600">{{ number_format($redirectsThisMonth) }}</span> of <span class="font-w600">{{ number_format($planLimit) }}</span> redirects per month.
                             </p>
                         </div>
                         <div class="col-sm-6 py-10 text-md-right">
@@ -100,7 +96,7 @@
                         </div>
                         <div class="block-content block-content-full">
                             <p class="mb-5">
-                                <strong>{{ number_format(auth()->user()->getRedirectsThisMonth()) }}</strong> of {{ number_format(auth()->user()->getPlanLimit()) }} redirects used.
+                                <strong>{{ number_format($redirectsThisMonth) }}</strong> of {{ number_format($planLimit) }} redirects used.
                             </p>
                             <div class="progress push">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ $progress }}%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">

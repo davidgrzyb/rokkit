@@ -77,6 +77,12 @@
                                     <span class="css-control-indicator"></span>
                                     I agree to Terms &amp; Conditions
                                 </label>
+
+                                @error('signup-terms')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group row gutters-tiny">
@@ -86,9 +92,9 @@
                                 </button>
                             </div>
                             <div class="col-6">
-                                <a class="btn btn-block btn-noborder btn-rounded btn-alt-secondary" href="{{ url('/terms') }}">
+                                <button type="button" class="btn btn-block btn-noborder btn-rounded btn-alt-secondary" data-toggle="modal" data-target="#modal-popin">
                                     <i class="si si-book-open text-muted mr-10"></i> Read Terms
-                                </a>
+                                </button>
                             </div>
                             <div class="col-6">
                                 <a class="btn btn-block btn-noborder btn-rounded btn-alt-secondary" href="{{ url('/login') }}">
@@ -100,6 +106,30 @@
                 </div>
             </div>
             <!-- END Sign Up Form -->
+        </div>
+        <div class="modal fade" id="modal-popin" tabindex="-1" role="dialog" aria-labelledby="modal-popin" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-xl modal-dialog-popin" role="document">
+                <div class="modal-content">
+                    <div class="block block-themed block-transparent mb-0">
+                        <div class="block-header bg-primary-dark">
+                            <h3 class="block-title">Terms &amp; Conditions</h3>
+                            <div class="block-options">
+                                <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                    <i class="si si-close"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="block-content">
+                            <pre>@include('auth.terms')</pre>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-alt-success" data-dismiss="modal">
+                            <i class="fa fa-check"></i> Close
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- END Page Content -->

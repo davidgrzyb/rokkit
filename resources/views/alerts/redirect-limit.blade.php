@@ -1,17 +1,20 @@
 @php
     $user = auth()->user();
+    $redirectsLeft = Cache::remember('redirects-left-'.$user->id, now()->addMinutes(5), function () use ($user) {
+        return $user->getRedirectsLeft();
+    });
 @endphp
 
-@if($user->getRedirectsLeft() <= 1000)
+@if($redirectsLeft <= 1000)
     <div wire:ignore class="row" id="redeem-limit-row">
         <div class="col-md-8 offset-md-2">
-            <div class="alert @if($user->getRedirectsLeft() <= 0) alert-danger @else alert-warning @endif alert-dismissable text-center" role="alert">
+            <div class="alert @if($redirectsLeft <= 0) alert-danger @else alert-warning @endif alert-dismissable text-center" role="alert">
                 <button id="redirect-notification-dismiss-btn" type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
                 <h3 class="alert-heading font-size-h4 font-w400">Redirect Limit Reached</h3>
                 <p class="mb-0">
-                    @if($user->getRedirectsLeft() <= 0)
+                    @if($redirectsLeft <= 0)
                         You have reached the redirect limit for your account. 
                     @else
                         Your account is close to the monthly redirect limit for your account. 
@@ -30,7 +33,8 @@
 
 @section('js_after')
     @parent
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha256-1A78rJEdiWTzco6qdn3igTBv9VupN3Q1ozZNTR4WE/Y=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" 
+        integrity="sha256-1A78rJEdiWTzco6qdn3igTBv9VupN3Q1ozZNTR4WE/Y=" crossorigin="anonymous"></script>
     <script>
         if (typeof $.cookie('redirect-notification-dismissed-{{ $user->email }}') !== 'undefined'){
             $('#redeem-limit-row').hide();

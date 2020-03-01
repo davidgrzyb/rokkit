@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-        <title>Codebase - Bootstrap 4 Admin Template &amp; UI Framework</title>
+        <title>Rokkit - Advertise During URL Redirects!</title>
 
-        <meta name="description" content="Codebase - Bootstrap 4 Admin Template &amp; UI Framework created by pixelcave and published on Themeforest">
+        <meta name="description" content="Advertise to customers during your shortened URL redirects - even using your own domain!">
         <meta name="author" content="pixelcave">
         <meta name="robots" content="noindex, nofollow">
 
@@ -112,33 +112,44 @@
 
                         If you would like to use the same navigation in both mobiles and desktops, you can use exactly the same markup inside sidebar and header navigation ul lists
                         -->
-                        <ul class="nav-main">
-                            <li>
-                                <a href="{{ url('/dashboard') }}"><i class="si si-cup"></i>Dashboard</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/links/create') }}"><i class="si si-plus"></i>Create New Link</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/links') }}"><i class="si si-rocket"></i>Links</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/domains') }}"><i class="si si-link"></i>Domains</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/account') }}"><i class="si si-user"></i>Account</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="si si-logout"></i> {{ __('Logout') }}
-                                </a>
+                        @if(auth()->check())
+                            <ul class="nav-main">
+                                <li>
+                                    <a href="{{ url('/dashboard') }}"><i class="si si-cup"></i>Dashboard</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/links/create') }}"><i class="si si-plus"></i>Create New Link</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/links') }}"><i class="si si-rocket"></i>Links</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/domains') }}"><i class="si si-link"></i>Domains</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/account') }}"><i class="si si-user"></i>Account</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="si si-logout"></i> {{ __('Logout') }}
+                                    </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                            </li>
-                        </ul>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </li>
+                            </ul>
+                        @else
+                            <ul class="nav-main">
+                                <li>
+                                    <a href="{{ url('/login') }}"><i class="si si-user"></i>Login</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/register') }}"><i class="si si-plus"></i>Register</a>
+                                </li>
+                            </ul>
+                        @endif
                     </div>
                     <!-- END Side Main Navigation -->
                 </div>
@@ -174,40 +185,48 @@
                         If your sidebar menu includes icons and you would like to hide them, you can add the class 'nav-main-header-no-icons'
                         -->
                         <ul class="nav-main-header">
-                            <li>
-                                <a class="btn btn-md" href="{{ url('/links/create') }}">
-                                    <i class="si si-plus"></i> Create New Link
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-submenu btn btn-md" data-toggle="nav-submenu" href="#">
-                                    <i class="si si-layers"></i> Menu
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="{{ url('/dashboard') }}"><i class="si si-cup"></i>Dashboard</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('/links') }}"><i class="si si-rocket"></i>Links</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('/domains') }}"><i class="si si-link"></i>Domains</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('/account') }}"><i class="si si-user"></i>Account</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            <i class="si si-logout"></i> {{ __('Logout') }}
-                                        </a>
+                            @if(auth()->check())
+                                <li>
+                                    <a class="btn btn-md" href="{{ url('/links/create') }}">
+                                        <i class="si si-plus"></i> Create New Link
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-submenu btn btn-md" data-toggle="nav-submenu" href="#">
+                                        <i class="si si-layers"></i> Menu
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ url('/dashboard') }}"><i class="si si-cup"></i>Dashboard</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url('/links') }}"><i class="si si-rocket"></i>Links</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url('/domains') }}"><i class="si si-link"></i>Domains</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url('/account') }}"><i class="si si-user"></i>Account</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                <i class="si si-logout"></i> {{ __('Logout') }}
+                                            </a>
 
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            @csrf
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                @csrf
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @else
+                                <li>
+                                    <a class="btn btn-md" href="{{ url('/login') }}">
+                                        <i class="si si-user"></i> Login
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                         <!-- END Header Navigation -->
 
@@ -269,10 +288,10 @@
             <footer id="page-footer" class="bg-white opacity-0">
                 <div class="content py-20 font-size-sm clearfix">
                     <div class="float-right">
-                        Built with <i class="fa fa-heart text-pulse"></i> by <a class="font-w600" href="https://davidgrzyb.com" target="_blank">David Grzyb</a>
+                        Built <!-- with <i class="fa fa-heart text-pulse"></i> --> by <a class="font-w600" href="https://davidgrzyb.com" target="_blank">David Grzyb</a>
                     </div>
                     <div class="float-left">
-                        <!-- <a class="font-w600" href="https://1.envato.market/95j" target="_blank">Codebase 3.3</a> &copy; <span class="js-year-copy"></span> -->
+                        <a class="font-w600" href="https://rokk.it" target="_blank">rokk.it</a> &copy; <span class="js-year-copy"></span>
                     </div>
                 </div>
             </footer>
