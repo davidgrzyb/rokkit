@@ -38,7 +38,7 @@ class Domain extends Model
         }
 
         $records = collect(dns_get_record($this->name));
-        if ($records->where('type', 'CNAME') === config('rokkit.default_domain')) {
+        if ($records->where('type', 'CNAME')->first()['target'] === config('rokkit.default_domain')) {
             return true;
         }
 
