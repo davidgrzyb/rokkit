@@ -47,7 +47,11 @@ class CloudwaysApi
 
     public function addDomain(string $domain)
     {
-        $data = json_decode(
+        if (! config('services.cloudways.enabled', false)) {
+            return;
+        }
+
+        return json_decode(
             $this->client->post('/api/v1/app/manage/aliases', [
                 'debug' => true,
                 'form_params' => [

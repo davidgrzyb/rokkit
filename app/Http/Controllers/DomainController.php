@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Domain;
 use Illuminate\Http\Request;
+use App\Http\Api\CloudwaysApi;
 use Illuminate\Support\Facades\Session;
 
 class DomainController extends Controller
@@ -38,6 +39,8 @@ class DomainController extends Controller
             'name' => $request->input('domain'),
             'user_id' => auth()->user()->id,
         ]);
+
+        app(CloudwaysApi::class)->addDomain($request->input('domain'));
 
         Session::flash('message', sprintf('Success! Your %s domain was added.', $domain->name));
         return redirect('/domains');
