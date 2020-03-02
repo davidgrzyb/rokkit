@@ -42,25 +42,25 @@
             @foreach($links as $link)
                 <div class="block-content block-content-full border-bottom">
                     <div class="row align-items-center">
-                        <div class="col-sm-6 py-10">
+                        <div class="col-sm-10 py-10">
                             <h3 class="h4 text-muted font-w400 mb-0">
                                 @unless(! $link->domain_id)
                                     <button type="button" class="badge badge-light shortened-url" data-toggle="tooltip" data-placement="top" title="Click to Copy!" data-clipboard-text="{{ $link->url }}">
-                                        {{ $link->url }}
+                                        {{ mb_strimwidth($link->url, 0, 27, '...') }}
                                     </button>
                                 @else
                                     <button type="button" class="badge badge-danger shortened-url">
-                                        [Removed]/{{ $link->slug }}
+                                        [Removed]/{{ mb_strimwidth($link->slug, 0, 27, '...') }}
                                     </button>
                                 @endunless
                                 <i class="fa fa-long-arrow-right mr-3 ml-3"></i> 
-                                {{ $link->target }}
+                                {{ mb_strimwidth($link->target, 0, 27, '...') }}
                             </h3>
                             <p class="font-size-sm text-muted mt-2 mb-0 ml-1">
                                 <span class="font-w400">{{ $link->getRedirectsCount() }} redirects, {{ $link->getClicksCount() }} ad clicks.
                             </p>
                         </div>
-                        <div class="col-sm-6 py-10 text-md-right">
+                        <div class="col-sm-2 py-10 text-md-right">
                             <i class="fa fa-circle font-size-md @if($link->isEnabled()) text-success @else text-danger @endif mr-5"></i>
                             @if($link->domain_id)
                                 <a class="btn btn-md btn-outline-secondary btn-rounded my-5" href="{{ url('/links', [$link->id]) }}">
