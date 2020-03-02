@@ -34,4 +34,12 @@ return [
         'key' => env('STRIPE_KEY'),
     ],
 
+    'cloudways' => [
+        'enabled' => env('CLOUDWAYS_ENABLED'),
+        'client_email' => env('CLOUDWAYS_EMAIL'),
+        'client_key' => env('CLOUDWAYS_KEY'),
+        'server_id' => env('CLOUDWAYS_SERVER_ID'),
+        'app_id' => env('CLOUDWAYS_APP_ID'),
+    ]
+
 ];
