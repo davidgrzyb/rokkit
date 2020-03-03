@@ -44,15 +44,9 @@
                     <div class="row align-items-center">
                         <div class="col-sm-10 py-10">
                             <h3 class="h4 text-muted font-w400 mb-0">
-                                @unless(! $link->domain_id)
-                                    <button type="button" class="badge badge-light shortened-url" data-toggle="tooltip" data-placement="top" title="Click to Copy!" data-clipboard-text="{{ $link->url }}">
-                                        {{ mb_strimwidth($link->url, 0, 27, '...') }}
-                                    </button>
-                                @else
-                                    <button type="button" class="badge badge-danger shortened-url">
-                                        [Removed]/{{ mb_strimwidth($link->slug, 0, 27, '...') }}
-                                    </button>
-                                @endunless
+                                <button type="button" class="badge badge-light shortened-url" data-toggle="tooltip" data-placement="top" title="Click to Copy!" data-clipboard-text="{{ $link->url }}">
+                                    {{ mb_strimwidth($link->url, 0, 27, '...') }}
+                                </button>
                                 <i class="fa fa-long-arrow-right mr-3 ml-3"></i> 
                                 {{ mb_strimwidth($link->target, 0, 27, '...') }}
                             </h3>
@@ -62,11 +56,9 @@
                         </div>
                         <div class="col-sm-2 py-10 text-md-right">
                             <i class="fa fa-circle font-size-md @if($link->isEnabled()) text-success @else text-danger @endif mr-5"></i>
-                            @if($link->domain_id)
-                                <a class="btn btn-md btn-outline-secondary btn-rounded my-5" href="{{ url('/links', [$link->id]) }}">
-                                    <i class="fa fa-wrench mr-5"></i> Manage
-                                </a>
-                            @endif
+                            <a class="btn btn-md btn-outline-secondary btn-rounded my-5" href="{{ url('/links', [$link->id]) }}">
+                                <i class="fa fa-wrench mr-5"></i> Manage
+                            </a>
                         </div>
                     </div>
                 </div>

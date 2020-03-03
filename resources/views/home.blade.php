@@ -11,7 +11,9 @@
                             <h1 class="font-w600 font-size-h2 mb-20">
                                 Advertise During URL Redirects!
                             </h1>
-                            <span class="d-inline-block bg-body-light rounded-pill py-5 px-15 mb-15 font-w600" style="font-size:20px;">{{ number_format($redirectsCount) }} redirects</span>
+                            @if($redirectsCount > 10000)
+                                <span class="d-inline-block bg-body-light rounded-pill py-5 px-15 mb-15 font-w600" style="font-size:20px;">{{ number_format($redirectsCount) }} redirects</span>
+                            @endif
                             <p class="font-size-lg nice-copy text-muted mb-30">
                                 Advertise to customers during your shortened URL redirects - even using your own domain!
                             </p>
@@ -20,7 +22,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-md-6 offset-md-1 py-30 d-none d-md-flex align-items-md-center justify-content-md-end invisible" data-toggle="appear" data-class="animated fadeInRight">
+                    <div id="demo-image" class="col-md-6 offset-md-1 d-none d-md-flex align-items-md-center justify-content-md-end invisible" data-toggle="appear" data-class="animated fadeInRight">
                         <img class="img-fluid" src="{{ asset('storage/rokkit-homepage.png') }}" alt="Rokkit Homepage Demo">
                     </div>
                 </div>
@@ -34,6 +36,11 @@
     <style>
         #main-container {
             background-color: white;
+        }
+
+        #demo-image {
+            -webkit-box-shadow: -25px 0px 31px 7px #E5E5E5; 
+            box-shadow: -25px 0px 31px 7px #E5E5E5;
         }
     </style>
 @endsection
