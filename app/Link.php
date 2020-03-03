@@ -118,7 +118,7 @@ class Link extends Model
     {
         do {
             $slug = substr(md5(rand()), 0, 7);
-        } while (Link::where('slug', $slug)->exists());
+        } while (self::where('slug', $slug)->exists());
 
         return $slug;
     }

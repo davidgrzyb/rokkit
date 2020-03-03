@@ -15,10 +15,6 @@ use App\Http\Api\CloudwaysApi;
 
 Route::get('/', 'HomeController@index');
 
-Route::get('/token', function () {
-    return app(CloudwaysApi::class)->addDomain('test.com');
-});
-
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function()

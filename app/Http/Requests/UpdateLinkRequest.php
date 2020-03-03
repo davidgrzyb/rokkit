@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateLinkRequest extends FormRequest
@@ -26,7 +27,7 @@ class UpdateLinkRequest extends FormRequest
         return [
             'link-id'            => ['required', 'exists:links,id'],
             'domain-id'          => ['required', 'exists:domains,id'],
-            'slug'               => ['max:50'],
+            'slug'               => ['max:50', Rule::notIn(config('rokkit.unavailable_slugs'))],
             'target-url'         => ['required'],
             'image'              => ['nullable', 'mimes:jpg,png,gif,jpeg', 'max:5000'],
             'main-text'          => ['required_if:advertising-enabled,true', 'max:250'],
