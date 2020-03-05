@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Charge;
 use Carbon\Carbon;
 use Laravel\Cashier\Billable;
 use Illuminate\Support\Facades\Cache;
@@ -57,6 +58,11 @@ class User extends Authenticatable
         return $this->hasMany(Domain::class);
     }
 
+    public function charges()
+    {
+        return $this->hasMany(Charge::class);
+    }
+
     public function getActiveLinks()
     {
         return $this->links()->where('enabled', true)->get();
@@ -81,7 +87,15 @@ class User extends Authenticatable
 
     public function getPlanLimit()
     {
-        return config(sprintf('plans.%s.limit', $this->plan));
+        $limit = config(sprintf('plans.%s.limit', $this->plan));
+
+        if ($this->subscribed(User::PRO_PLAN)) {
+            $extraRedirects = $this->charges()->whereMonth('created_at', now()->month)->count() * config('rokkit.extra_redirects.redirects');
+        } else {
+            $extraRedirects = 0;
+        }
+
+        return $limit + $extraRedirects;
     }
 
     public function getRedirectsLeft()

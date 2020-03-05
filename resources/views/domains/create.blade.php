@@ -9,7 +9,7 @@
                 Add New Custom Domain
             </h2>
             <h3 class="h5 text-muted mb-0">
-                Your domain must be <a href="#" target="_blank">properly configured</a> first.
+                Your domain must be <a href="#" id="domain-instructions-url">properly configured</a> first.
             </h3>
         </div>
 
@@ -53,4 +53,27 @@
         </div>
     </div>
     <!-- END Page Content -->
+@endsection
+
+@section('css_before')
+    <link rel="stylesheet" href="{{ asset('js/plugins/sweetalert2/sweetalert2.min.css') }}">
+@endsection
+
+@section('js_after')
+    @parent
+
+    <script src="{{ asset('js/plugins/sweetalert2/sweetalert2.min.js') }}" aria-hidden="true"></script>
+    <script>
+        $('#domain-instructions-url').click(function(e) {
+            Swal.fire({
+                title: 'Creating CNAME Records',
+                text: "{{ config('rokkit.domain_instructions') }}",
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Okay, got it!'
+            });
+        });
+    </script>
 @endsection

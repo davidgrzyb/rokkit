@@ -178,9 +178,7 @@
                     <div class="row items-push">
                         <div class="col-lg-3">
                             <p class="text-muted">
-                                Please use this form to enter a payment method and upgrade. Cancel any time.
-                                <br><br>
-                                <a href="#">Check out the pro plan feature here!</a>
+                                Please use this form to enter a payment method and upgrade. Our Pro plan costs $5/mo and include 250,000 monthly redirects, with every 1 million redirects after that costing $5. Cancel any time.
                             </p>
                         </div>
                 @else
