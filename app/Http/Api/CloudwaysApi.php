@@ -9,7 +9,7 @@ use GuzzleHttp\{
 };
 use Illuminate\Support\Facades\Cache;
 
-class CloudwaysApi
+class CloudwaysApi implements CloudwaysApiInterface
 {
     const REMEMBER_TOKEN_MINUTES = 55;
 
