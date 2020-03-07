@@ -69,7 +69,7 @@ class CloudwaysApi
         );
     }
 
-    public function addCertificate(string $domain)
+    public function addCertificate()
     {
         if (! config('services.cloudways.enabled', false)) {
             return;
@@ -83,7 +83,7 @@ class CloudwaysApi
                     'app_id' => config('services.cloudways.app_id'),
                     'ssl_email' => config('services.cloudways.client_email'),
                     'wild_card' => false,
-                    'ssl_domains' => [$domain],
+                    'ssl_domains' => Domain::all()->pluck('name')->toArray(),
                 ],
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',
