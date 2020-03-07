@@ -83,7 +83,7 @@ class CloudwaysApi
                     'app_id' => config('services.cloudways.app_id'),
                     'ssl_email' => config(),
                     'wild_card' => false,
-                    'ssl_domains' => $domain,
+                    'ssl_domains' => [$domain],
                 ],
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',
