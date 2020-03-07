@@ -81,7 +81,7 @@ class CloudwaysApi
                 'form_params' => [
                     'server_id' => config('services.cloudways.server_id'),
                     'app_id' => config('services.cloudways.app_id'),
-                    'ssl_email' => config(),
+                    'ssl_email' => config('services.cloudways.client_email'),
                     'wild_card' => false,
                     'ssl_domains' => [$domain],
                 ],
