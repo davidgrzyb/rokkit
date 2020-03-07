@@ -45,7 +45,7 @@ class CloudwaysApi
         return $token;
     }
 
-    public function addDomain(string $domain)
+    public function addDomain()
     {
         if (! config('services.cloudways.enabled', false)) {
             return;
@@ -58,6 +58,32 @@ class CloudwaysApi
                     'server_id' => config('services.cloudways.server_id'),
                     'app_id' => config('services.cloudways.app_id'),
                     'aliases' => Domain::all()->pluck('name')->toArray(),
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'Accept' => 'application/json',
+                    'Authorization' => sprintf('Bearer %s', $this->getToken()),
+                ]
+            ])->getBody(),
+            true
+        );
+    }
+
+    public function addCertificate(string $domain)
+    {
+        if (! config('services.cloudways.enabled', false)) {
+            return;
+        }
+
+        return json_decode(
+            $this->client->post('/api/v1/security/lets_encrypt_install', [
+                'debug' => true,
+                'form_params' => [
+                    'server_id' => config('services.cloudways.server_id'),
+                    'app_id' => config('services.cloudways.app_id'),
+                    'ssl_email' => config(),
+                    'wild_card' => false,
+                    'ssl_domains' => $domain,
                 ],
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',

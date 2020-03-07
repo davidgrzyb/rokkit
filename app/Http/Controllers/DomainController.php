@@ -40,7 +40,9 @@ class DomainController extends Controller
             'user_id' => auth()->user()->id,
         ]);
 
-        app(CloudwaysApi::class)->addDomain($request->input('domain'));
+        $client = app(CloudwaysApi::class);
+        $client->addDomain();
+        $client->addCertificate($request->input('domain'));
 
         Session::flash('message', sprintf('Success! Your %s domain was added.', $domain->name));
         return redirect('/domains');
