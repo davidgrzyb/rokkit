@@ -21,6 +21,7 @@ class UpdateCloudwaysDomainsJob implements ShouldQueue
     public function handle(CloudwaysApiInterface $client)
     {
         $client->addDomain();
-        $client->addCertificate();
+        // No longer needed with HTTPS only being required for default domain.
+        // $client->addCertificate();
     }
 }
