@@ -83,7 +83,12 @@ class CloudwaysApi implements CloudwaysApiInterface
                     'app_id' => config('services.cloudways.app_id'),
                     'ssl_email' => config('services.cloudways.client_email'),
                     'wild_card' => false,
-                    'ssl_domains' => Domain::all()->pluck('name')->toArray(),
+                    'ssl_domains' => Domain::all()->pluck('name')->filter(function ($domain) {
+                        $records = collect(dns_get_record($domain));
+                        $cnameRecord = $records->where('type', 'CNAME')->first()['target'];
+
+                        return $cnameRecord === config('rokkit.default_domain');
+                     })->toArray(),
                 ],
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',

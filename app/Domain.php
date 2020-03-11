@@ -37,11 +37,18 @@ class Domain extends Model
             return true;
         }
 
-        $records = collect(dns_get_record($this->name));
-        if ($records->where('type', 'CNAME')->first()['target'] === config('rokkit.default_domain')) {
+        if ($this->isConfigured()) {
             return true;
         }
 
         return false;
+    }
+
+    public function isConfigured()
+    {
+        $records = collect(dns_get_record($this->name));
+        $cnameRecord = $records->where('type', 'CNAME')->first()['target'];
+
+        return $cnameRecord === config('rokkit.default_domain');
     }
 }
