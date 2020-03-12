@@ -87,6 +87,9 @@
                                     @foreach($domains as $domain)
                                         <option value="{{ $domain->id }}" @if($link->domain_id === $domain->id) selected @endif>{{ $domain->name }}</option>
                                     @endforeach
+                                    @if(! auth()->user()->subscribed(\App\User::PRO_PLAN))
+                                        <input type="hidden" id="domain-id" name="domain-id" value="{{ $domains->where('name', config('rokkit.default_domain'))->first()->id }}">
+                                    @endif
                                 </select>
                                 <small class="text-muted">The free plan does not include custom domain functionality. <a href="{{ url('/account') }}" target="_blank">Upgrade your plan here.</a></small>
                             </div>

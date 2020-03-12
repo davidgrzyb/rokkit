@@ -75,6 +75,15 @@ class CloudwaysApi implements CloudwaysApiInterface
             return;
         }
 
+        $domains = Domain::all()->pluck('name')->filter(function ($domain) {
+            $records = collect(dns_get_record($domain));
+            $cnameRecord = $records->where('type', 'CNAME')->first()['target'];
+
+            return $cnameRecord === config('rokkit.default_domain');
+        })->toArray();
+
+        array_push($domains, config('rokkit.default_domain'));
+
         return json_decode(
             $this->client->post('/api/v1/security/lets_encrypt_install', [
                 'debug' => true,
@@ -83,12 +92,7 @@ class CloudwaysApi implements CloudwaysApiInterface
                     'app_id' => config('services.cloudways.app_id'),
                     'ssl_email' => config('services.cloudways.client_email'),
                     'wild_card' => false,
-                    'ssl_domains' => Domain::all()->pluck('name')->filter(function ($domain) {
-                        $records = collect(dns_get_record($domain));
-                        $cnameRecord = $records->where('type', 'CNAME')->first()['target'];
-
-                        return $cnameRecord === config('rokkit.default_domain');
-                     })->toArray(),
+                    'ssl_domains' => $domains,
                 ],
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',
