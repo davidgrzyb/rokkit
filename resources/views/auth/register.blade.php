@@ -7,8 +7,8 @@
             <!-- Header -->
             <div class="py-30 px-5 text-center">
                 <a class="link-effect font-w700" href="index.html">
-                    <i class="si si-fire"></i>
-                    <span class="font-size-xl text-primary-dark">code</span><span class="font-size-xl">base</span>
+                    <i class="si si-rocket"></i>
+                    <span class="font-size-xl text-primary-dark">rokk</span><span class="font-size-xl">it</span>
                 </a>
                 <h1 class="h2 font-w700 mt-50 mb-10">Create New Account</h1>
                 <h2 class="h4 font-w400 text-muted mb-0">Please add your details</h2>
