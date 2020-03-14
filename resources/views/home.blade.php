@@ -15,7 +15,7 @@
                             <p class="font-size-lg nice-copy text-muted mb-30">
                                 Advertise to customers during your shortened URL redirects - even using your own domain!
                             </p>
-                            <a class="btn btn-hero btn-alt-secondary" href="{{ url('/demo') }}">
+                            <a class="btn btn-hero btn-alt-secondary" href="{{ url('/demo') }}" target="_blank">
                                 <i class="fa fa-link text-primary mr-5"></i> Try Demo Link
                             </a>
                             <a class="btn btn-hero btn-alt-primary" href="{{ url('/register') }}">
