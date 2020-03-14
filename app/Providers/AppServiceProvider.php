@@ -21,8 +21,11 @@ class AppServiceProvider extends ServiceProvider
                 new Client([
                     'base_uri' => 'https://api.cloudways.com',
                 ]),
+                config('services.cloudways.server_id'),
+                config('services.cloudways.app_id'),
                 config('services.cloudways.client_email'),
                 config('services.cloudways.client_key'),
+                config('rokkit.default_domain'),
             );
         });
     }

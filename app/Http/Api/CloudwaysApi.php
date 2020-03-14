@@ -14,14 +14,20 @@ class CloudwaysApi implements CloudwaysApiInterface
     const REMEMBER_TOKEN_MINUTES = 55;
 
     public $client;
+    protected $clientServerId;
+    protected $clientAppId;
     protected $clientEmail;
     protected $clientKey;
+    protected $defaultDomain;
 
-    public function __construct(ClientInterface $client, string $clientEmail, string $clientKey)
+    public function __construct(ClientInterface $client, string $clientServerId, string $clientAppId, string $clientEmail, string $clientKey, string $defaultDomain)
     {
         $this->client = $client;
+        $this->clientServerId = $clientServerId;
+        $this->clientAppId = $clientAppId;
         $this->clientEmail = $clientEmail;
         $this->clientKey = $clientKey;
+        $this->defaultDomain = $defaultDomain;
     }
 
     protected function getToken()
@@ -30,19 +36,23 @@ class CloudwaysApi implements CloudwaysApiInterface
             return Cache::get('cloudways-api-token');
         }
 
-        $token = json_decode(
-            $this->client->post('/api/v1/oauth/access_token', [
-                'query' => [
-                    'email' => $this->clientEmail,
-                    'api_key' => $this->clientKey,
-                ],
-            ])->getBody(),
-            true
-        )['access_token'];
-        
-        Cache::put('cloudways-api-token', $token, now()->addMinutes(self::REMEMBER_TOKEN_MINUTES));
+        try {
+            $token = json_decode(
+                $this->client->post('/api/v1/oauth/access_token', [
+                    'query' => [
+                        'email' => $this->clientEmail,
+                        'api_key' => $this->clientKey,
+                    ],
+                ])->getBody(),
+                true
+            )['access_token'];
 
-        return $token;
+            Cache::put('cloudways-api-token', $token, now()->addMinutes(self::REMEMBER_TOKEN_MINUTES));
+
+            return $token;
+        } catch (\Exception $e) {
+            \Log::error($e);
+        }
     }
 
     public function addDomain()
@@ -51,22 +61,26 @@ class CloudwaysApi implements CloudwaysApiInterface
             return;
         }
 
-        return json_decode(
-            $this->client->post('/api/v1/app/manage/aliases', [
-                'debug' => true,
-                'form_params' => [
-                    'server_id' => config('services.cloudways.server_id'),
-                    'app_id' => config('services.cloudways.app_id'),
-                    'aliases' => Domain::all()->pluck('name')->toArray(),
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Accept' => 'application/json',
-                    'Authorization' => sprintf('Bearer %s', $this->getToken()),
-                ]
-            ])->getBody(),
-            true
-        );
+        try {
+            return json_decode(
+                $this->client->post('/api/v1/app/manage/aliases', [
+                    'debug' => true,
+                    'form_params' => [
+                        'server_id' => $this->clientServerId,
+                        'app_id' => $this->clientAppId,
+                        'aliases' => Domain::all()->pluck('name')->toArray(),
+                    ],
+                    'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'Accept' => 'application/json',
+                        'Authorization' => sprintf('Bearer %s', $this->getToken()),
+                    ]
+                ])->getBody(),
+                true
+            );
+        } catch (\Exception $e) {
+            \Log::error($e);
+        }
     }
 
     public function addCertificate()
@@ -79,28 +93,34 @@ class CloudwaysApi implements CloudwaysApiInterface
             $records = collect(dns_get_record($domain));
             $cnameRecord = $records->where('type', 'CNAME')->first()['target'];
 
-            return $cnameRecord === config('rokkit.default_domain');
+            return $cnameRecord === $this->defaultDomain;
         })->toArray();
 
-        array_push($domains, config('rokkit.default_domain'));
+        if (! in_array($this->defaultDomain, $domains)) {
+            array_push($domains, $this->defaultDomain);
+        }
 
-        return json_decode(
-            $this->client->post('/api/v1/security/lets_encrypt_install', [
-                'debug' => true,
-                'form_params' => [
-                    'server_id' => config('services.cloudways.server_id'),
-                    'app_id' => config('services.cloudways.app_id'),
-                    'ssl_email' => config('services.cloudways.client_email'),
-                    'wild_card' => false,
-                    'ssl_domains' => $domains,
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Accept' => 'application/json',
-                    'Authorization' => sprintf('Bearer %s', $this->getToken()),
-                ]
-            ])->getBody(),
-            true
-        );
+        try {
+            return json_decode(
+                $this->client->post('/api/v1/security/lets_encrypt_install', [
+                    'debug' => true,
+                    'form_params' => [
+                        'server_id' => $this->clientServerId,
+                        'app_id' => $this->clientAppId,
+                        'ssl_email' => $this->clientEmail,
+                        'wild_card' => false,
+                        'ssl_domains' => $domains,
+                    ],
+                    'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'Accept' => 'application/json',
+                        'Authorization' => sprintf('Bearer %s', $this->getToken()),
+                    ]
+                ])->getBody(),
+                true
+            );
+        } catch (\Exception $e) {
+            \Log::error($e);
+        }
     }
 }

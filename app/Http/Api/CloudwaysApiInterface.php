@@ -9,7 +9,7 @@ use GuzzleHttp\{
 
 interface CloudwaysApiInterface
 {
-    public function __construct(ClientInterface $client, string $clientEmail, string $clientKey);
+    public function __construct(ClientInterface $client, string $clientServerId, string $clientAppId, string $clientEmail, string $clientKey, string $defaultDomain);
     public function addDomain();
     public function addCertificate();
 }
