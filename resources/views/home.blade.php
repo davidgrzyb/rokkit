@@ -11,13 +11,14 @@
                             <h1 class="font-w600 font-size-h2 mb-20">
                                 Advertise During URL Redirects!
                             </h1>
-                            @if($redirectsCount > 10000)
-                                <span class="d-inline-block bg-body-light rounded-pill py-5 px-15 mb-15 font-w600" style="font-size:20px;">{{ number_format($redirectsCount) }} redirects</span>
-                            @endif
+                            <span class="d-inline-block bg-body-light rounded-pill py-5 px-15 mb-15 font-w600" style="font-size:18px;">Over {{ number_format(round($redirectsCount, -2)) }} redirects so far!</span>
                             <p class="font-size-lg nice-copy text-muted mb-30">
                                 Advertise to customers during your shortened URL redirects - even using your own domain!
                             </p>
-                            <a class="btn btn-hero btn-alt-secondary" href="{{ url('/register') }}">
+                            <a class="btn btn-hero btn-alt-secondary" href="{{ url('/demo') }}">
+                                <i class="fa fa-link text-primary mr-5"></i> Try Demo Link
+                            </a>
+                            <a class="btn btn-hero btn-alt-primary" href="{{ url('/register') }}">
                                 <i class="fa fa-arrow-right text-primary mr-5"></i> Sign Up For Free
                             </a>
                         </div>
