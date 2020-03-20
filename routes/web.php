@@ -27,12 +27,15 @@ Route::group(['middleware' => 'auth'], function()
     Route::post('/links/store', 'LinkController@store');
     Route::post('/links/update', 'LinkController@update');
 
-    Route::get('/domains', 'DomainController@index');
-    Route::get('/domains/create', 'DomainController@create');
-    Route::post('/domains/store', 'DomainController@store');
-    Route::post('/domains/delete', 'DomainController@delete');
+    Route::group(['middleware' => 'check.membership'], function()
+    {
+        Route::get('/domains', 'DomainController@index');
+        Route::get('/domains/create', 'DomainController@create');
+        Route::post('/domains/store', 'DomainController@store');
+        Route::post('/domains/delete', 'DomainController@delete');
+    });
 
-    Route::get('/account', 'AccountController@index');
+    Route::get('/account', 'AccountController@index')->name('account');
     Route::post('/account/update', 'AccountController@update');
     Route::post('/account/upgrade', 'AccountController@upgrade');
     Route::post('/account/downgrade', 'AccountController@downgrade');
