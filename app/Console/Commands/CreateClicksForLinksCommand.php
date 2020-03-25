@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Link;
 use App\Click;
+use App\Redirect;
 use Illuminate\Console\Command;
 
 class CreateClicksForLinksCommand extends Command
@@ -60,7 +61,7 @@ class CreateClicksForLinksCommand extends Command
             }
 
             for ($i = 0 ; $i < $click[1]; $i++) {
-                Click::insert([
+                Redirect::insert([
                     'link_id' => $link->id,
                     'created_at' => now()->subMonth(2),
                 ]);
